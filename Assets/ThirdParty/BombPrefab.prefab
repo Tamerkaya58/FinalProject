@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1969606467337196064}
   - component: {fileID: 2838855684870325823}
   - component: {fileID: 2593422223159273001}
+  - component: {fileID: 8496695571154232796}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 78200044157304019}
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -99,6 +100,21 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4711208715938537054, guid: 32d09746e26936f4fb52ff7206d3460c, type: 3}
+--- !u!114 &8496695571154232796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78200044157304019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f30a5616f67303c40aac4ad5c1458831, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hazardMesh: {fileID: 0}
+  fadeDuration: 1.5
+  detectionTrigger: {fileID: 2593422223159273001}
 --- !u!1 &609682693442831443
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,7 +222,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8937465387522055700}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.68, y: 0.03, z: 29.72}
+  m_LocalPosition: {x: -1.5, y: 1.09, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
