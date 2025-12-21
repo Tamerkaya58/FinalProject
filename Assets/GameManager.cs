@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
         }
         return TotalWeight;
     }
-    private GameObject GetRandomWeightedPrefab()
+    private (GameObject prefab, float yValue) GetRandomWeightedPrefab()
     {
         float randomValue = Random.Range(0f, CalculateTotalWeight());
         float WeightSum = 0f;
@@ -69,26 +69,27 @@ public class GameManager : MonoBehaviour
             WeightSum += spawn.Weight;
             if (randomValue <= WeightSum)
             {
-                return spawn.Prefab;
+                return (spawn.Prefab, spawn.Prefab.transform.position.y);
+
             }
         }
 
         // Fallback in case of rounding errors
         Debug.LogError($"Weighted Random Failed! RandomValue: {randomValue}, TotalWeight: {TotalWeight}. Returning null.");
-        return null;
+        return (null, 0f);
     }
 
     void PlaceObstacles()
     {
         float randomValue = Random.Range(0f, TotalWeight);
-
-
+        
         for (int i = 0; i < 2000; i += 100/CurrentLevel.Difficulty)
         {
-            Vector3 random = new Vector3(Random.Range(-4.5f, 4.5f), 0.5f, RandomRoadZ());
-            GameObject obs = Instantiate(GetRandomWeightedPrefab(), random, Quaternion.identity);
+            var selectedData = GetRandomWeightedPrefab();
+            Vector3 random = new Vector3(Random.Range(-3.2f, 3.2f), selectedData.yValue, RandomRoadZ());
+            GameObject obs = Instantiate(selectedData.prefab, random, Quaternion.identity);
             obs.transform.localEulerAngles = new Vector3(0, 90, 0);
-            Debug.Log("Placed obstacle " + obs.name + " at: " + random.ToString());
+           // Debug.Log("Placed obstacle " + obs.name + " at: " + random.ToString());
             obs.transform.SetParent(statics.transform);
         }
     }

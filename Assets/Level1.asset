@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d06b59e1fc7b8e54e8ee58b950c5f916, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
-  Difficulty: 20
+  Difficulty: 5
   SpawnableObjects:
   - Name: BarrierHeavy
     Prefab: {fileID: 6328423227435374564, guid: 4144cf4b7df1ea8469f4d6c31adabb4d, type: 3}
@@ -28,7 +28,7 @@ MonoBehaviour:
     Weight: 1
   - Name: RoadCone
     Prefab: {fileID: 1300399225187642, guid: 7ed407e0aeced17448a2a8beade4d639, type: 3}
-    Weight: 20
+    Weight: 1
   - Name: TireStack
     Prefab: {fileID: 1051214733312122, guid: 52b0483b1937d7b45a0fcebd84ba00bb, type: 3}
     Weight: 1
