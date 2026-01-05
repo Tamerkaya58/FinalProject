@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: fdf47ff7e94f9a74ea4110b990165365
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - RoadChunk: {fileID: 6646072827912522103, guid: ea45e4958ce0b1a4b9459be6f47447cb, type: 3}
+  - levelData: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

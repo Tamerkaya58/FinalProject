@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using Codice.CM.Common;
+
 
 public abstract class BaseHazard : MonoBehaviour
 {
