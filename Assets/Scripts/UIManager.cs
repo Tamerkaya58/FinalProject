@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+
         rb = car.GetComponent<Rigidbody>();
     }
     void Update()
@@ -33,8 +34,15 @@ public class UIManager : MonoBehaviour
 
     public void QuitApp()
     {
-        Application.Quit();
+        Debug.Log("QUIT CLICK GELDI");
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
     }
+
 
     public void TryAgain()
     {

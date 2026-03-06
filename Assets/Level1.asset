@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d06b59e1fc7b8e54e8ee58b950c5f916, type: 3}
+  m_Name: Level1
+  m_EditorClassIdentifier: 
+  Difficulty: 5
+  SpawnableObjects:
+  - Name: BarrierHeavy
+    Prefab: {fileID: 6328423227435374564, guid: 4144cf4b7df1ea8469f4d6c31adabb4d, type: 3}
+    Weight: 1
+  - Name: BarrierMetal
+    Prefab: {fileID: 1575539274977262, guid: fe337cb383a88824e84eb3aa64df90aa, type: 3}
+    Weight: 1
+  - Name: BarrierPlastic
+    Prefab: {fileID: 1498720108242694, guid: 0e999189ff415364798d53bb25e626ce, type: 3}
+    Weight: 1
+  - Name: Bollard
+    Prefab: {fileID: 1121259624995810, guid: e4dfcbe8294dfb542b0c83720815e04e, type: 3}
+    Weight: 1
+  - Name: RoadCone
+    Prefab: {fileID: 1300399225187642, guid: 7ed407e0aeced17448a2a8beade4d639, type: 3}
+    Weight: 1
+  - Name: TireStack
+    Prefab: {fileID: 1051214733312122, guid: 52b0483b1937d7b45a0fcebd84ba00bb, type: 3}
+    Weight: 1
+  - Name: TntBomb
+    Prefab: {fileID: 8937465387522055700, guid: 36df65efcd5ab2a47ba0ec02bbcf069a, type: 3}
+    Weight: 1

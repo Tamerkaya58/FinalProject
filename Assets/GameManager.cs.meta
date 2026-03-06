@@ -3,7 +3,13 @@ guid: 8b5d009a117e6414ea1b22588ec87bf5
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - carRB: {instanceID: 0}
+  - coin: {instanceID: 0}
+  - mainMenu: {instanceID: 0}
+  - loseScreen: {instanceID: 0}
+  - winScreen: {instanceID: 0}
+  - CurrentLevel: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

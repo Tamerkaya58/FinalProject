@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.Assertions;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +15,10 @@ public class GameManager : MonoBehaviour
     public GameObject mainMenu;
     public GameObject loseScreen;
     public GameObject winScreen;
+
+    public LevelData CurrentLevel;
+    private float TotalWeight;
+    
     GameObject statics;
 
     public static int level = 1;
@@ -30,38 +36,65 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
     }
     void Start()
     {
+        if (CurrentLevel == null)
+        {
+            Debug.LogError("CurrentLevel is missing!");
+            return;
+        }
+
         statics = GameObject.Find("Statics");
         PlaceObstacles();
         PlaceCoins();
     }
+    float CalculateTotalWeight()
+    {
+        TotalWeight = 0f;
+        foreach (var spawn in CurrentLevel.SpawnableObjects)
+        {
+            TotalWeight += spawn.Weight;
+        }
+        return TotalWeight;
+    }
+    private (GameObject prefab, float yValue) GetRandomWeightedPrefab()
+    {
+        float randomValue = Random.Range(0f, CalculateTotalWeight());
+        float WeightSum = 0f;
+
+        foreach (var spawn in CurrentLevel.SpawnableObjects)
+        {
+            WeightSum += spawn.Weight;
+            if (randomValue <= WeightSum)
+            {
+                return (spawn.Prefab, spawn.Prefab.transform.position.y);
+
+            }
+        }
+
+        // Fallback in case of rounding errors
+        Debug.LogError($"Weighted Random Failed! RandomValue: {randomValue}, TotalWeight: {TotalWeight}. Returning null.");
+        return (null, 0f);
+    }
 
     void PlaceObstacles()
     {
-        if (level == 1)
+        float randomValue = Random.Range(0f, TotalWeight);
+        
+        for (int i = 0; i < 2000; i += 100/CurrentLevel.Difficulty)
         {
-            frequency = 50;
-        }
-        else if (level == 2)
-        {
-            frequency = 30;
-        }
-        else if (level == 3)
-        {
-            frequency = 10;
-        }
-
-        for (int i = 0; i < 2000; i += frequency)
-        {
-            Vector3 random = new Vector3(Random.Range(-4.5f, 4.5f), 0.5f, RandomRoadZ());
-            GameObject obs = Instantiate(obstacles[Random.Range(0, obstacles.Length)], random, Quaternion.identity);
+            var selectedData = GetRandomWeightedPrefab();
+            Vector3 random = new Vector3(Random.Range(-3.2f, 3.2f), selectedData.yValue, RandomRoadZ());
+            GameObject obs = Instantiate(selectedData.prefab, random, Quaternion.identity);
             obs.transform.localEulerAngles = new Vector3(0, 90, 0);
+           // Debug.Log("Placed obstacle " + obs.name + " at: " + random.ToString());
             obs.transform.SetParent(statics.transform);
         }
     }
 
+    // Generates a random coordinate on the road for coin placement
     Vector3 RandomRoadCoordinate()
     {
         Vector3 random = new Vector3(Random.Range(-4.5f, 4.5f), 1f, Random.Range (1 , 1000));
@@ -117,4 +150,13 @@ public class GameManager : MonoBehaviour
             loseScreen.SetActive(true);
         }
     }
+}
+
+
+[System.Serializable]
+public class WeightedSpawn
+{
+    public string Name; 
+    public GameObject Prefab;
+    [Range(0f, 100f)] public float Weight;
 }
