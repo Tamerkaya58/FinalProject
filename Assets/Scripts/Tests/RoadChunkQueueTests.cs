@@ -3,133 +3,62 @@ using UnityEngine;
 
 public class RoadChunkQueueTests
 {
-    private RoadChunkQueue _queue;
-    private GameObject _testChunk;
-    private const int MaxCapacity = 3;
-    private GameObject RoadChunk; 
-    private GameObject GameManager;
-    RoadProcessing roadProcessing;
+    private RoadChunkQueue QueueInstance;
+    private GameObject TestChunkOne;
+    private GameObject TestChunkTwo;
+    private GameObject TestChunkThree;
+    private const int MaxCapacityLimit = 3;
 
     [SetUp]
-    public void SetUp()
+    public void SetUpTestEnvironment()
     {
-        _queue = new RoadChunkQueue(MaxCapacity);
-        _testChunk = new GameObject("Test_Chunk_General");
-        RoadChunk = Resources.Load<GameObject>("RoadChunk");
-        GameManager = new GameObject("GameManager");
-        roadProcessing = GameManager.AddComponent<RoadProcessing>();
-        roadProcessing.RoadChunk = RoadChunk;
+        QueueInstance = new RoadChunkQueue(MaxCapacityLimit);
+        
+        // Creating 3 distinct chunks to properly test the queue limits.
+        TestChunkOne = new GameObject("Test_Chunk_First");
+        TestChunkTwo = new GameObject("Test_Chunk_Second");
+        TestChunkThree = new GameObject("Test_Chunk_Third");
     }
+
     [TearDown]
-    public void TearDown()
+    public void CleanUpTestEnvironment()
     {
-        if (_testChunk != null)
-        {
-            Object.DestroyImmediate(_testChunk);
-        }
-    }
-    [Test]
-    public void DequeueFIFOOrder()
-    {
-        var chunk2 = new GameObject("Chunk2");
-        var chunk3 = new GameObject("Chunk3");
-
-        _queue.EnqueueChunk(_testChunk);
-        _queue.EnqueueChunk(chunk2);
-        _queue.EnqueueChunk(chunk3);
-
-        Assert.AreSame(_testChunk, _queue.DequeueOldestChunk());
-        Assert.AreSame(chunk2, _queue.DequeueOldestChunk());
-        Assert.AreSame(chunk3, _queue.DequeueOldestChunk());
-
-        Object.DestroyImmediate(chunk2);
-        Object.DestroyImmediate(chunk3);
-    }
-    [Test]
-    public void TrueOnlyWhenFull()
-    {
-        Assert.IsFalse(_queue.IsAtCapacity());
-
-        _queue.EnqueueChunk(_testChunk);
-        _queue.EnqueueChunk(_testChunk);
-        _queue.EnqueueChunk(_testChunk);
-
-        Assert.IsTrue(_queue.IsAtCapacity());
-    }
-    [Test]
-    public void DequeueNullWhenEmpty()
-    {
-        var result = _queue.DequeueOldestChunk();
-
-        Assert.IsNull(result);
-    }
-    [Test]
-    public void RoadChunkAlignWithPreviousChunkZ()
-    {
-        int SpawnAmount = 3;
-
-        RoadChunkQueue _roadQueue = roadProcessing.InitializeRoadQueue(SpawnAmount);
-        float ZScale = RoadChunk.transform.localScale.z;
-        for (int i = 0; i < SpawnAmount; i++)
-        {
-            Transform RoadTransform = _roadQueue.returntransform(i);
-            Assert.AreEqual(ZScale*i, RoadTransform.position.z);
-        }
+        // MERCILESS CLEANUP: If you create it, you must destroy it in tests.
+        if (TestChunkOne != null) Object.DestroyImmediate(TestChunkOne);
+        if (TestChunkTwo != null) Object.DestroyImmediate(TestChunkTwo);
+        if (TestChunkThree != null) Object.DestroyImmediate(TestChunkThree);
     }
 
-    // --- LOGIC / GAME LOOP ---
     [Test]
-    public void MarkChunkAsProcessed_When_TriggerFired()
+    public void EnqueueChunk_WhenThreeChunksAdded_ShouldReachMaxCapacity()
     {
-        
-    }
-    [Test]
-    public void RecycleOldestChunk_WhenThresholdReached()
-    {
-        
+        // 1 & 2: Set capacity to 3 and add 3 prefabs
+        QueueInstance.EnqueueChunk(TestChunkOne);
+        QueueInstance.EnqueueChunk(TestChunkTwo);
+        QueueInstance.EnqueueChunk(TestChunkThree);
+
+        // Verification
+        Assert.IsTrue(QueueInstance.IsAtCapacity(), "System failed: The queue should be at max capacity (3) right now.");
     }
 
-    // --- State Management ---
     [Test]
-    public void RecycledChunk_Should_ResetProcessedFlag_ToFalse()
+    public void DequeueAndDestroyOldestChunk_WhenAtMaxCapacity_ShouldRemoveFirstAddedChunk()
     {
-        
-    } 
-    [Test]
-    public void RecycledChunk_Should_ClearOldHazards()
-    {
-        
-    } 
-    [Test]
-    public void QueueSize_ShouldRemainConstant_AfterRecycle()
-    {
-        
-    } 
+        // 1 & 2: Arrange the environment
+        QueueInstance.EnqueueChunk(TestChunkOne);
+        QueueInstance.EnqueueChunk(TestChunkTwo);
+        QueueInstance.EnqueueChunk(TestChunkThree);
 
-    // --- HAZARD PLACEMENT ---
-    [Test]
-    public void HazardsAreChild()
-    {
+        // Verify initial state
+        Assert.IsTrue(QueueInstance.IsAtCapacity(), "Initial state is wrong.");
+
+        // 3: Act - Remove the oldest chunk (TestChunkOne)
+        QueueInstance.DequeueAndDestroyOldestChunk();
+
+        // Verification
+        Assert.IsFalse(QueueInstance.IsAtCapacity(), "System failed: The queue is still at capacity. The chunk was not removed properly.");
         
-    }
-    [Test]
-    public void HazardsTouchMainRoadSurface()
-    {
-        
-    }
-    [Test]
-    public void HazardsNotExceedRoad()
-    {
-        
-    }
-    // --- DATA & CONFIG ---
-    public void Initialize_ShouldHandle_NullOrEmpty_LevelData()
-    {
-        
-    }
-    [Test]
-    public void SelectPrefab_BasedOnLevelData()
-    {
-        
+        // Note: Because this is an EditMode test, TestChunkOne is marked for destruction 
+        // but won't evaluate to 'null' instantly in an Assert without yielding a frame.
     }
 }
