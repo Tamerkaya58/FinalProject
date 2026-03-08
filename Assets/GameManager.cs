@@ -5,38 +5,35 @@ using UnityEngine.Assertions;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
-
+    // Singleton instance
+    public static GameManager instance { get; private set; }
+    // References
     public Rigidbody carRB;
-
+    // Prefabs
     public GameObject[] obstacles;
     public GameObject coin;
-
+    // UI
     public GameObject mainMenu;
     public GameObject loseScreen;
     public GameObject winScreen;
-
+    // Level Data
     public LevelData CurrentLevel;
     private float TotalWeight;
-    
+    // Statics
     GameObject statics;
 
     public static int level = 1;
     int frequency;
 
     public int points;
+    [Header("Road Processing Configuration")]
+    [SerializeField] private int RoadCapacity = 3;
+    public RoadChunkQueue ActiveRoadQueue { get; private set; }
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
-
+        InitializeSingleton();
+        InitializeRoadSystem();
     }
     void Start()
     {
@@ -49,6 +46,19 @@ public class GameManager : MonoBehaviour
         statics = GameObject.Find("Statics");
         PlaceObstacles();
         PlaceCoins();
+    }
+    private void InitializeSingleton()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        instance = this;
+    }
+    private void InitializeRoadSystem()
+    {
+        ActiveRoadQueue = new RoadChunkQueue(RoadCapacity);
     }
     float CalculateTotalWeight()
     {
