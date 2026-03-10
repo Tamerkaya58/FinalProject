@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class LevelData : ScriptableObject
 {
     public int Difficulty = 1;
+    public float DifficultyGrowth = 0.1f;
+    public GameObject RoadChunk;
     // You can add more later: SpeedMultiplier, SkyboxMaterial, etc.
     public List<WeightedSpawn> SpawnableObjects;
 }
