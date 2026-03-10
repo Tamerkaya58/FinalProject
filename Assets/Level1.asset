@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: 
   Difficulty: 5
+  DifficultyGrowth: 0.1
+  RoadChunk: {fileID: 1094600026237502273, guid: 989e7988f370fcd4c8ba79a62893f39b, type: 3}
   SpawnableObjects:
   - Name: BarrierHeavy
     Prefab: {fileID: 6328423227435374564, guid: 4144cf4b7df1ea8469f4d6c31adabb4d, type: 3}

@@ -25,10 +25,17 @@ public class GameManager : MonoBehaviour
     public static int level = 1;
     int frequency;
 
-    public int points;
-    [Header("Road Processing Configuration")]
+    [Header("Level Configuration")]
+    public LevelData CurrentLevelData;
+    public GameObject InitialRoadPrefab;
+    public int InitialSpawnAmount = 5;
+
+    [Header("Road Queue Configuration")]
     [SerializeField] private int RoadCapacity = 3;
+    
     public RoadChunkQueue ActiveRoadQueue { get; private set; }
+
+    public int points;
 
     private void Awake()
     {
@@ -59,6 +66,21 @@ public class GameManager : MonoBehaviour
     private void InitializeRoadSystem()
     {
         ActiveRoadQueue = new RoadChunkQueue(RoadCapacity);
+    }
+
+    public void ManageChunkQueue(GameObject NewChunk)
+    {
+        // If max capacity is reached, dequeue and destroy the oldest before enqueuing the new one.
+        if (ActiveRoadQueue.IsAtCapacity())
+        {
+            ActiveRoadQueue.DequeueAndDestroyOldestChunk();
+        }
+        
+        ActiveRoadQueue.EnqueueChunk(NewChunk);
+    }
+    public void InitialRoadSpawn()
+    {
+        
     }
     float CalculateTotalWeight()
     {
