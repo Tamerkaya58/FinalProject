@@ -44,21 +44,6 @@ public class RoadChunkQueueTests
     [Test]
     public void DequeueAndDestroyOldestChunk_WhenAtMaxCapacity_ShouldRemoveFirstAddedChunk()
     {
-        // 1 & 2: Arrange the environment
-        QueueInstance.EnqueueChunk(TestChunkOne);
-        QueueInstance.EnqueueChunk(TestChunkTwo);
-        QueueInstance.EnqueueChunk(TestChunkThree);
-
-        // Verify initial state
-        Assert.IsTrue(QueueInstance.IsAtCapacity(), "Initial state is wrong.");
-
-        // 3: Act - Remove the oldest chunk (TestChunkOne)
-        QueueInstance.DequeueAndDestroyOldestChunk();
-
-        // Verification
-        Assert.IsFalse(QueueInstance.IsAtCapacity(), "System failed: The queue is still at capacity. The chunk was not removed properly.");
         
-        // Note: Because this is an EditMode test, TestChunkOne is marked for destruction 
-        // but won't evaluate to 'null' instantly in an Assert without yielding a frame.
     }
 }

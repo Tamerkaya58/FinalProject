@@ -7,7 +7,6 @@ public class FollowTheCar : MonoBehaviour
     void Start()
     {
         PlaceLineSeperators();
-        PlaceBarriers();
     }
 
     private void OnTriggerExit(Collider other)

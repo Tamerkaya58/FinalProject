@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2654855652420747898}
   - component: {fileID: 2665991305506159256}
   - component: {fileID: 2803099664006023748}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tire (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 2654649693479425472}
   - component: {fileID: 2665111065091702692}
   - component: {fileID: 2802413834761524438}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tire (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 2654476434948779288}
   - component: {fileID: 2665819340975057866}
   - component: {fileID: 2803181368803342620}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tire (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -416,7 +416,7 @@ GameObject:
   - component: {fileID: 2654749430250745178}
   - component: {fileID: 2665592603936071138}
   - component: {fileID: 2802704401279338196}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -545,7 +545,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2607424980918515358}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tire Stack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -560,7 +560,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2611436951185592402}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.078, y: 0.5, z: 10}
+  m_LocalPosition: {x: -2.078, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -52,7 +52,7 @@ public abstract class BaseHazard : MonoBehaviour
             // 1. Hide the mesh immediately
             SetHazardAlpha(0f);
         }
-        Debug.Log($"{this.GetType().Name} is running BaseHazard.Awake()");
+
         
         // 2. Call the child class specific initialization
         OnInitialize();

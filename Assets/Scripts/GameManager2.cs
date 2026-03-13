@@ -25,4 +25,10 @@ public class GameManager2 : MonoBehaviour
             Debug.LogError("CurrentLevel is missing on GameManager! Drag your ScriptableObject.");
         }
     }
+
+    private void OnDestroy()
+    {
+        // Sahne kapanırken event aboneliğini temizle (memory leak önleme)
+        RoadProcessor?.Cleanup();
+    }
 }

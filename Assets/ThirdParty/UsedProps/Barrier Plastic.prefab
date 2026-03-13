@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 3167980063971157771}
   - component: {fileID: 3158028169271046605}
   - component: {fileID: 3010740513344376975}
-  m_Layer: 0
+  - component: {fileID: 3826165928481245842}
+  m_Layer: 6
   m_Name: Barrier Plastic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,3 +135,15 @@ LODGroup:
     renderers:
     - renderer: {fileID: 3117394324337917145}
   m_Enabled: 1
+--- !u!114 &3826165928481245842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3104144588619357923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d147634edb0b936439c165f84fc2fb15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
