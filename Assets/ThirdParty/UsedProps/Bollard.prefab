@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 4300684937317001897}
   - component: {fileID: 4289291154929419613}
   - component: {fileID: 4151515690261523065}
-  m_Layer: 0
+  - component: {fileID: 6314379099419877534}
+  m_Layer: 6
   m_Name: Bollard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,3 +135,15 @@ LODGroup:
     renderers:
     - renderer: {fileID: 4257305232613947017}
   m_Enabled: 1
+--- !u!114 &6314379099419877534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4271090189988861833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d147634edb0b936439c165f84fc2fb15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
