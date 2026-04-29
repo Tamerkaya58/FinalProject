@@ -52,8 +52,8 @@ ScriptedImporter:
 '
   optimizeGameObjects: 0
   materials:
-  - {instanceID: 0}
-  - {instanceID: 0}
+  - {fileID: -6478536213147159724, guid: 2ac2c5846ab61b243804e9f30f13b34b, type: 3}
+  - {fileID: -3846018093981099296, guid: 2ac2c5846ab61b243804e9f30f13b34b, type: 3}
   textures: []
   hasSceneData: 1
   hasAnimationData: 0

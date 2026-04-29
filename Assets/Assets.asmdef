@@ -1,7 +1,9 @@
 {
     "name": "Assets",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GameScripts"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

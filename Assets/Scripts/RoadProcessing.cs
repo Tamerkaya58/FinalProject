@@ -65,37 +65,36 @@ public class RoadProcessing
     // ==================== HESAPLAMALAR ====================
 
     private void CalculateRoadBoundaries()
-{
-    Transform FirstChild = RoadChunkPrefab.transform.GetChild(0);
-    BoxCollider ChildCollider = FirstChild.GetComponent<BoxCollider>();
+    {
+        if (RoadChunkPrefab == null)
+        {
+            Debug.LogError("FATAL ERROR: RoadChunkPrefab is null! Falling back to default values.");
+            ChunkLength = 100f;
+            RoadBoundaryX = 3.2f;
+            return;
+        }
 
-    if (ChildCollider != null)
-    {
-        // STEP 1: Calculate scales for Z-axis (Length) considering the entire hierarchy
-        float ChildScaleZ = FirstChild.transform.localScale.z;
-        float ParentScaleZ = RoadChunkPrefab.transform.localScale.z;
-        
-        // Multiplying collider size with both child and parent local scales
-        ChunkLength = ChildCollider.size.z * ChildScaleZ * ParentScaleZ;
-        
-        // STEP 2: Calculate scales for X-axis (Width) cleanly and correctly in one go
-        float ChildScaleX = FirstChild.transform.localScale.x;
-        float ParentScaleX = RoadChunkPrefab.transform.localScale.x;
-        
-        float ActualWidth = ChildCollider.size.x * ChildScaleX * ParentScaleX;
-        
-        // STEP 3: Calculate boundaries with the safety margin
-        RoadBoundaryX = (ActualWidth / 2f) * 0.975f;
-        
-        Debug.Log($"ChunkLength: {ChunkLength}, RoadBoundaryX: {RoadBoundaryX}");
+        // BoundsUtility kullanarak tüm render objelerinin sınırlarını hesaplıyoruz
+        Bounds roadBounds = RoadChunkPrefab.GetBounds();
+
+        if (roadBounds.size == Vector3.zero)
+        {
+            Debug.LogError("FATAL ERROR: RoadChunk Prefab lacks any Renderers to calculate bounds! Falling back to default values.");
+            ChunkLength = 100f;
+            RoadBoundaryX = 3.2f;
+        }
+        else
+        {
+            ChunkLength = roadBounds.size.z;
+            
+            float ActualWidth = roadBounds.size.x;
+            
+            // Sınırları güvenlik payı ile hesapla
+            RoadBoundaryX = (ActualWidth / 2f) * 0.975f;
+            
+            Debug.Log($"ChunkLength: {ChunkLength}, RoadBoundaryX: {RoadBoundaryX}");
+        }
     }
-    else
-    {
-        Debug.LogError("FATAL ERROR: RoadChunk Prefab lacks a child gameobject with a BoxCollider! Falling back to default values.");
-        ChunkLength = 100f;
-        RoadBoundaryX = 3.2f;
-    }
-}
 
     private void CalculateTotalWeight()
     {
