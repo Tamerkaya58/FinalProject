@@ -19,7 +19,7 @@ ScriptedImporter:
   _maximumLod: 300
   _readWriteEnabled: 1
   _generateColliders: 0
-  _addColliders: 0
+  _addColliders: 2
   _swapUvs: 0
   _generateLightmapUVs: 0
   _importBlendShapeNames: 1
@@ -52,10 +52,10 @@ ScriptedImporter:
 '
   optimizeGameObjects: 0
   materials:
-  - {instanceID: 0}
-  - {instanceID: 0}
-  - {instanceID: 0}
-  - {instanceID: 0}
+  - {fileID: -5605289326131794027, guid: bb64036caec574342826ac172b946ad5, type: 3}
+  - {fileID: -6478536213147159724, guid: bb64036caec574342826ac172b946ad5, type: 3}
+  - {fileID: -3846018093981099296, guid: bb64036caec574342826ac172b946ad5, type: 3}
+  - {fileID: 4874126678125670354, guid: bb64036caec574342826ac172b946ad5, type: 3}
   textures: []
   hasSceneData: 1
   hasAnimationData: 0

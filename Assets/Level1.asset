@@ -14,36 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Difficulty: 1
   DifficultyGrowth: 0.1
-  RoadChunk: {fileID: 7344896568823532121, guid: 5a46625e651103749a6dd8ce740e2a3e, type: 3}
+  RoadChunk: {fileID: 3589885796463353472, guid: 6cea5fa3461bebe4aa10c2640c75167e, type: 3}
   CoinPrefab: {fileID: 0}
   BarrierPrefab: {fileID: 1060225752000038376, guid: 11c169e60ec43474b813e77262924875, type: 3}
-  BarrierSpawnChance: 0.7
+  BarrierSpawnChance: 0.865
   SpawnableObjects:
-  - Name: BarrierHeavy
-    Prefab: {fileID: 6328423227435374564, guid: 4144cf4b7df1ea8469f4d6c31adabb4d, type: 3}
+  - Name: YellowBlocker
+    Prefab: {fileID: 5582761046474740119, guid: 45e9121af1dddcf4baa6bed3874f1365, type: 3}
     Weight: 1
-    YOffset: 0.75
-  - Name: BarrierMetal
-    Prefab: {fileID: 6678607589081891892, guid: 0211b8bfa642b154c88de734c627f5c1, type: 3}
+    YOffset: 10
+  - Name: YellowBlocke
+    Prefab: {fileID: 5900684716022871997, guid: 7690d019e0202bd41bd88e11878aedce, type: 3}
     Weight: 1
-    YOffset: 0.75
-  - Name: BarrierPlastic
-    Prefab: {fileID: 3104144588619357923, guid: f483ea9dad2d1924eb4f90904b058975, type: 3}
+    YOffset: 10
+  - Name: Yellowstop
+    Prefab: {fileID: 8200226683065676082, guid: b1dc3a4492e9d3d45a676ae0d236e5f7, type: 3}
     Weight: 1
-    YOffset: 0.75
-  - Name: Bollard
-    Prefab: {fileID: 4271090189988861833, guid: 62c47a69cfecabc40911a9a0b6e167ac, type: 3}
-    Weight: 1
-    YOffset: 0.75
-  - Name: RoadCone
-    Prefab: {fileID: 6391099766078314325, guid: 32f1c7e7a881d2d4db917d2e009082eb, type: 3}
-    Weight: 1
-    YOffset: 0.75
-  - Name: TireStack
-    Prefab: {fileID: 2611436951185592402, guid: f4abc152058ba5445b1da1ee1ec1c79f, type: 3}
-    Weight: 1
-    YOffset: 0.75
-  - Name: TntBomb
-    Prefab: {fileID: 8937465387522055700, guid: 36df65efcd5ab2a47ba0ec02bbcf069a, type: 3}
-    Weight: 1
-    YOffset: 0.75
+    YOffset: 10
