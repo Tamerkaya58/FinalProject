@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Singleton instance
     public static GameManager instance { get; private set; }
-    // References
+
     public Rigidbody carRB;
-    // UI
+
     public GameObject mainMenu;
     public GameObject loseScreen;
     public GameObject winScreen;
+
+    public bool gameStarted = false;
 
     public static int level = 1;
 
@@ -33,6 +34,9 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (!gameStarted)
+            return;
+
         CheckLose();
         CheckLevelOutOfArray();
     }
@@ -60,10 +64,10 @@ public class GameManager : MonoBehaviour
     IEnumerator ThreeSecondsOfStayStillCheck()
     {
         yield return new WaitForSeconds(3);
-        if ((int)carRB.velocity.magnitude == 0)
+
+        if (gameStarted && (int)carRB.velocity.magnitude == 0)
         {
             loseScreen.SetActive(true);
         }
     }
 }
-

@@ -213,9 +213,9 @@
       "url": "https://packages.unity.com"
     },
     "org.khronos.unitygltf": {
-      "version": "https://github.com/KhronosGroup/UnityGLTF.git",
+      "version": "file:UnityGLTF/UnityGLTF-main",
       "depth": 0,
-      "source": "git",
+      "source": "local",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "2.0.0",
         "com.unity.modules.audio": "1.0.0",
@@ -224,8 +224,7 @@
         "com.unity.shadergraph": "10.0.0",
         "com.unity.mathematics": "1.0.0",
         "com.unity.collections": "1.0.0"
-      },
-      "hash": "96e932649e9ec3e66cc628badae43d1fc8cd34af"
+      }
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
