@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Difficulty: 1
   DifficultyGrowth: 0.1
-  RoadChunk: {fileID: 3589885796463353472, guid: 6cea5fa3461bebe4aa10c2640c75167e, type: 3}
+  RoadChunk: {fileID: 5736227037762278074, guid: 795e9ec7b183c1a4d96faf672bac14ea, type: 3}
   CoinPrefab: {fileID: 0}
   BarrierPrefab: {fileID: 1060225752000038376, guid: 11c169e60ec43474b813e77262924875, type: 3}
   BarrierSpawnChance: 0.865

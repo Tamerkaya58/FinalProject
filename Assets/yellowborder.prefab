@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5740617025869462386}
   - component: {fileID: 1270410660911931661}
   - component: {fileID: 525978539614836753}
-  - component: {fileID: -4843753162844108306}
   m_Layer: 0
   m_Name: yellowborder
   m_TagString: Untagged
@@ -100,19 +99,3 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1715977637327074773, guid: 89f26d5ac11d4744baafbbc88ed3b726, type: 3}
---- !u!54 &-4843753162844108306
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5900684716022871997}
-  serializedVersion: 2
-  m_Mass: 100
-  m_Drag: 0.1
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
