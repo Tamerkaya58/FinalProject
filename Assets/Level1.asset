@@ -22,12 +22,8 @@ MonoBehaviour:
   - Name: YellowBlocker
     Prefab: {fileID: 5582761046474740119, guid: 45e9121af1dddcf4baa6bed3874f1365, type: 3}
     Weight: 1
-    YOffset: 10
-  - Name: YellowBlocke
-    Prefab: {fileID: 5900684716022871997, guid: 7690d019e0202bd41bd88e11878aedce, type: 3}
-    Weight: 1
-    YOffset: 10
+    YOffset: 2
   - Name: Yellowstop
     Prefab: {fileID: 8200226683065676082, guid: b1dc3a4492e9d3d45a676ae0d236e5f7, type: 3}
     Weight: 1
-    YOffset: 10
+    YOffset: 2
