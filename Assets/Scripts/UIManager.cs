@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -7,51 +5,79 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public GameObject car;
-    Rigidbody rb;
+    private Rigidbody rb;
 
     public GameObject mainMenu;
+    public GameObject loseMessage;
+    public GameObject winMessage;
 
     public TMP_Text uiElementSpeed;
     public TMP_Text uiElementPoints;
     public TMP_Text uiElementLevel;
 
-    private string speedUnit; // Ayarlardan çekeceğimiz birim bilgisi
+    private string speedUnit;
 
     private void Start()
     {
-        rb = car.GetComponent<Rigidbody>();
+        if (car != null)
+            rb = car.GetComponent<Rigidbody>();
 
-        // Oyun başladığında kaydedilmiş birim ayarını çek (Varsayılan KMH)
         UpdateSpeedUnit();
+
+        if (GameManager.restartFromTryAgain)
+        {
+            if (mainMenu != null) mainMenu.SetActive(false);
+            if (loseMessage != null) loseMessage.SetActive(false);
+            if (winMessage != null) winMessage.SetActive(false);
+
+            ActivateTextWithParents(uiElementSpeed);
+            ActivateTextWithParents(uiElementPoints);
+            ActivateTextWithParents(uiElementLevel);
+        }
     }
 
-    void Update()
+    private void Update()
     {
         ShowUI();
     }
 
-    void ShowUI()
+    private void ShowUI()
     {
-        // Senin belirlediğin temel hız değeri (km/h olarak)
+        if (rb == null) return;
+
         float baseSpeed = rb.velocity.magnitude * 5f;
 
-        // Seçilen birime göre ekrana yazdır ve hesapla
         if (speedUnit == "MPH")
         {
-            int mphSpeed = (int)(baseSpeed * 0.62f); // KM'yi Mil'e çevir
-            uiElementSpeed.text = mphSpeed.ToString() + " MPH";
+            int mphSpeed = (int)(baseSpeed * 0.62f);
+            uiElementSpeed.text = mphSpeed + " MPH";
         }
         else
         {
-            // Varsayılan KM/H durumu
-            uiElementSpeed.text = ((int)baseSpeed).ToString() + " KM/H";
+            uiElementSpeed.text = ((int)baseSpeed) + " KM/H";
         }
 
-        uiElementPoints.text = GameManager.instance.points.ToString();
-        uiElementLevel.text = "LEVEL : " + GameManager.level.ToString();
+        if (GameManager.instance != null)
+        {
+            uiElementPoints.text = GameManager.instance.points.ToString();
+            uiElementLevel.text = "LEVEL : " + GameManager.level.ToString();
+        }
     }
 
-    // Eğer oyun içindeyken ayar değiştirilirse, SettingsManager'dan bu fonksiyonu çağırabiliriz
+    private void ActivateTextWithParents(TMP_Text text)
+    {
+        if (text == null) return;
+
+        text.gameObject.SetActive(true);
+
+        Transform parent = text.transform.parent;
+        while (parent != null)
+        {
+            parent.gameObject.SetActive(true);
+            parent = parent.parent;
+        }
+    }
+
     public void UpdateSpeedUnit()
     {
         speedUnit = PlayerPrefs.GetString("SpeedUnitPref", "KMH");
@@ -59,7 +85,6 @@ public class UIManager : MonoBehaviour
 
     public void QuitApp()
     {
-        Debug.Log("QUIT CLICK GELDI");
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -69,13 +94,16 @@ public class UIManager : MonoBehaviour
 
     public void TryAgain()
     {
-        SceneManager.LoadScene(0);
-        mainMenu.SetActive(false);
+        Time.timeScale = 1f;
+
+        GameManager.restartFromTryAgain = true;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void NextLevel()
     {
-        SceneManager.LoadScene(0);
-        mainMenu.SetActive(false);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

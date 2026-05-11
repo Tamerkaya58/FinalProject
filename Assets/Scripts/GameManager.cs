@@ -1,9 +1,10 @@
-using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
+
+    public static bool restartFromTryAgain = false;
 
     public Rigidbody carRB;
 
@@ -14,60 +15,105 @@ public class GameManager : MonoBehaviour
     public bool gameStarted = false;
 
     public static int level = 1;
-
     public int points;
+
+    private float stillTimer = 0f;
+    private float stillSpeedLimit = 0.25f;
+    private float loseDelay = 3f;
 
     private void Awake()
     {
-        InitializeSingleton();
-    }
-
-    private void InitializeSingleton()
-    {
         if (instance != null && instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
             return;
         }
+
         instance = this;
     }
 
-    void Update()
+    private void Start()
+    {
+        stillTimer = 0f;
+
+        if (restartFromTryAgain)
+        {
+            restartFromTryAgain = false;
+
+            gameStarted = true;
+
+            if (mainMenu != null) mainMenu.SetActive(false);
+            if (loseScreen != null) loseScreen.SetActive(false);
+            if (winScreen != null) winScreen.SetActive(false);
+        }
+    }
+
+    private void Update()
     {
         if (!gameStarted)
             return;
 
-        CheckLose();
         CheckLevelOutOfArray();
+        CheckLose();
     }
 
-    void CheckLevelOutOfArray()
+    private void CheckLevelOutOfArray()
     {
-        if (level > 3) level = 1;
+        if (level > 3)
+            level = 1;
     }
 
-    void CheckLose()
+    private void CheckLose()
     {
-        if (!mainMenu.activeInHierarchy && !winScreen.activeInHierarchy && !loseScreen.activeInHierarchy)
+        if (mainMenu != null && mainMenu.activeInHierarchy) return;
+        if (winScreen != null && winScreen.activeInHierarchy) return;
+        if (loseScreen != null && loseScreen.activeInHierarchy) return;
+        if (carRB == null) return;
+
+        if (carRB.transform.position.y < -3f)
         {
-            if ((int)carRB.velocity.magnitude == 0)
+            LoseGame();
+            return;
+        }
+
+        if (carRB.velocity.magnitude < stillSpeedLimit)
+        {
+            stillTimer += Time.deltaTime;
+
+            if (stillTimer >= loseDelay)
             {
-                StartCoroutine(ThreeSecondsOfStayStillCheck());
+                LoseGame();
             }
-            else if ((int)carRB.gameObject.transform.position.y < -3)
-            {
-                loseScreen.SetActive(true);
-            }
+        }
+        else
+        {
+            stillTimer = 0f;
         }
     }
 
-    IEnumerator ThreeSecondsOfStayStillCheck()
+    public void LoseGame()
     {
-        yield return new WaitForSeconds(3);
+        gameStarted = false;
+        stillTimer = 0f;
 
-        if (gameStarted && (int)carRB.velocity.magnitude == 0)
-        {
+        Time.timeScale = 0f;
+
+        if (loseScreen != null)
             loseScreen.SetActive(true);
-        }
+    }
+
+    public void StartGame()
+    {
+        gameStarted = true;
+        stillTimer = 0f;
+
+        if (mainMenu != null)
+            mainMenu.SetActive(false);
+
+        if (loseScreen != null)
+            loseScreen.SetActive(false);
+
+        if (winScreen != null)
+            winScreen.SetActive(false);
     }
 }
