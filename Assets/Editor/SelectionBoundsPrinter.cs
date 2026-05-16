@@ -54,8 +54,11 @@ public class SelectionBoundsPrinter
         float height = bounds.size.y;
         float depth = bounds.size.z;
 
+        Vector3 pos = activeObject.transform.position;
+
         // Format and print the results to the console on a single line
         string report = $"<b>[Bounds]</b> {activeObject.name} -> " +
+                        $"<color=#9b59b6>Pos:</color> ({pos.x:F2}, {pos.y:F2}, {pos.z:F2}) | " +
                         $"<color=#3498db>Width(X):</color> {width:F2} | " +
                         $"<color=#2ecc71>Height(Y):</color> {height:F2} | " +
                         $"<color=#e74c3c>Depth(Z):</color> {depth:F2}";
