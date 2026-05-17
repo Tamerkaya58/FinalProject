@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d06b59e1fc7b8e54e8ee58b950c5f916, type: 3}
+  m_Name: Level2
+  m_EditorClassIdentifier: 
+  Difficulty: 1
+  DifficultyGrowth: 0.1
+  RoadChunk: {fileID: 5736227037762278074, guid: 540738a839588bc43bbcac6e79af37cd, type: 3}
+  CoinPrefab: {fileID: 0}
+  BarrierPrefab: {fileID: 0}
+  BarrierSpawnChance: 0.5
+  BoundsReferencePrefab: {fileID: 3589885796463353472, guid: 6cea5fa3461bebe4aa10c2640c75167e, type: 3}
+  SpawnSafeZoneStart: 0
+  SpawnSafeZoneEnd: 15
+  SpawnableObjects:
+  - Name: Desert box trap
+    Prefab: {fileID: 1215214148622379523, guid: 30686efb14ddee44abd701671aa92492, type: 3}
+    Weight: 1
+    YOffset: 3.5
+    DontModifyRigidbody: 0
+    UsePrefabRotation: 0
+  - Name: OrangeBlocker
+    Prefab: {fileID: 1694563915254273332, guid: 4239a98728567af4ca92e57b0bc27908, type: 3}
+    Weight: 1
+    YOffset: 3.5
+    DontModifyRigidbody: 0
+    UsePrefabRotation: 0
+  - Name: YellowBlocker
+    Prefab: {fileID: 8771091787928289351, guid: 920196a5968a36241959aa2c89986516, type: 3}
+    Weight: 1
+    YOffset: 3.5
+    DontModifyRigidbody: 0
+    UsePrefabRotation: 1

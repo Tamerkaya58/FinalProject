@@ -36,6 +36,14 @@ public class GameManager : MonoBehaviour
     {
         stillTimer = 0f;
 
+        if (mainMenu == null)
+        {
+            // If there's no main menu in this scene, we auto-start
+            gameStarted = true;
+            if (loseScreen != null) loseScreen.SetActive(false);
+            if (winScreen != null) winScreen.SetActive(false);
+        }
+
         if (restartFromTryAgain)
         {
             restartFromTryAgain = false;

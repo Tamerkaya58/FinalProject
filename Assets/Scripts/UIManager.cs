@@ -104,6 +104,21 @@ public class UIManager : MonoBehaviour
     public void NextLevel()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            GameManager.restartFromTryAgain = true; // Auto start next level
+            SceneManager.LoadScene(nextSceneIndex);
+        }
+        else
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+    }
+
+    public void ReturnToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
     }
 }

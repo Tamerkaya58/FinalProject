@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d06b59e1fc7b8e54e8ee58b950c5f916, type: 3}
+  m_Name: Level3
+  m_EditorClassIdentifier: 
+  Difficulty: 1
+  DifficultyGrowth: 0.1
+  RoadChunk: {fileID: 689603719310980882, guid: 366968606043d694abf19a0fd0bea7ed, type: 3}
+  CoinPrefab: {fileID: 0}
+  BarrierPrefab: {fileID: 0}
+  BarrierSpawnChance: 0.5
+  BoundsReferencePrefab: {fileID: 846493270310339076, guid: 978a4bb4aef884844914c6d608a7c71b, type: 3}
+  SpawnSafeZoneStart: 0
+  SpawnSafeZoneEnd: 15
+  SpawnableObjects:
+  - Name: whitestop
+    Prefab: {fileID: 1601178185732915546, guid: d30a5356d469b0e4c97b0a0a3870686a, type: 3}
+    Weight: 1
+    YOffset: 3.5
+    DontModifyRigidbody: 1
+    UsePrefabRotation: 1
+  - Name: whiteBlocker
+    Prefab: {fileID: 4267804961583948199, guid: 36a473a3b6335a94e939feccc7e99e4f, type: 3}
+    Weight: 1
+    YOffset: 3.5
+    DontModifyRigidbody: 0
+    UsePrefabRotation: 1

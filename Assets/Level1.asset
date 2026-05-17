@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Difficulty: 1
   DifficultyGrowth: 0.1
-  RoadChunk: {fileID: 5736227037762278074, guid: 795e9ec7b183c1a4d96faf672bac14ea, type: 3}
+  RoadChunk: {fileID: 3589885796463353472, guid: 6cea5fa3461bebe4aa10c2640c75167e, type: 3}
   CoinPrefab: {fileID: 0}
   BarrierPrefab: {fileID: 8771091787928289351, guid: bbcfd5b39f44de64a9c0f0bcf38f704e, type: 3}
   BarrierSpawnChance: 0.865
@@ -31,6 +31,6 @@ MonoBehaviour:
   - Name: Yellowstop
     Prefab: {fileID: 8200226683065676082, guid: b1dc3a4492e9d3d45a676ae0d236e5f7, type: 3}
     Weight: 1
-    YOffset: 5
+    YOffset: 3.5
     DontModifyRigidbody: 1
     UsePrefabRotation: 1

@@ -6,9 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/DriveFast.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    path: Assets/MainMenu.unity
+    guid: 8983b4de934a9824a85e64fe84de7d93
   - enabled: 1
-    path: Assets/Scripts/Tests/Scenes/Test.unity
-    guid: 5c7015fe69dd9544b956e48c8461a13d
+    path: Assets/Scenes/Level_City.unity
+    guid: 04986086df905b447a535d80186b6ec6
+  - enabled: 1
+    path: Assets/Scenes/Level_Desert.unity
+    guid: aab58031b71876a44b58af8ef939503b
+  - enabled: 1
+    path: Assets/Scenes/Level_Snow.unity
+    guid: 68c9aaa139292724f81805898f38b4d7
   m_configObjects: {}
