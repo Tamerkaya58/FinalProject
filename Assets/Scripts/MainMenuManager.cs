@@ -3,9 +3,35 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [Header("Menü Panelleri")]
+    public GameObject mainMenuPanel;      
+    public GameObject mapSelectionPanel;  
+
+    private void Start()
+    {
+        
+        if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
+        if (mapSelectionPanel != null) mapSelectionPanel.SetActive(false);
+    }
+
+    public void OpenMapSelection()
+    {
+        mainMenuPanel.SetActive(false);
+        mapSelectionPanel.SetActive(true);
+    }
+
+    
+    public void BackToMainMenu()
+    {
+        mapSelectionPanel.SetActive(false);
+        mainMenuPanel.SetActive(true);
+    }
+
+   
+
     public void LoadCityLevel()
     {
-        GameManager.restartFromTryAgain = true; // Auto-start the level
+        GameManager.restartFromTryAgain = true; 
         SceneManager.LoadScene("Level_City");
     }
 

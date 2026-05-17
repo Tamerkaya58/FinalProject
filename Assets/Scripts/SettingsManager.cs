@@ -29,9 +29,8 @@ public class SettingsManager : MonoBehaviour
     public Button btnUnitMPH;
 
     [Header("Seçim Renkleri")]
-    public Color selectedColor = Color.green; // Seçili butonun rengi
-    public Color normalColor = Color.white;   // Seçili olmayan butonun rengi
-
+    public Color selectedColor = Color.green; 
+    public Color normalColor = Color.white;  
     [Header("Kamera Referansý")]
     public CameraFollow cameraFollowScript;
 
@@ -40,12 +39,12 @@ public class SettingsManager : MonoBehaviour
         LoadSettings();
     }
 
-    // --- MENÜ GEÇÝÞLERÝ ---
+   
     public void OpenSettingsFromMainMenu()
     {
         settingsMainPanel.SetActive(true);
 
-        // EKLENEN SATIR: Menü her açýldýðýnda kayýtlý ayarlarý ve renkleri kontrol et
+        
         LoadSettings();
 
         ShowGeneralPanel();
@@ -67,7 +66,7 @@ public class SettingsManager : MonoBehaviour
         settingsMainPanel.SetActive(false);
     }
 
-    // --- SES AYARLARI ---
+    //  SES AYARLARI 
     public void SetMasterVolume(float volume)
     {
         audioMixer.SetFloat("MasterVol", volume);
@@ -86,7 +85,7 @@ public class SettingsManager : MonoBehaviour
         PlayerPrefs.SetFloat("EngineVolumePref", volume);
     }
 
-    // --- GÖRÜNTÜ AYARLARI ---
+    //  GÖRÜNTÜ AYARLARI 
     public void SetResolutionHD()
     {
         Screen.SetResolution(1920, 1080, Screen.fullScreen);
@@ -135,7 +134,7 @@ public class SettingsManager : MonoBehaviour
         Debug.Log("FPS Limiti 120'ye sabitlendi.");
     }
 
-    // --- GENEL AYARLAR ---
+  
     public void SetCameraFirstPerson()
     {
         PlayerPrefs.SetInt("CameraViewPref", 0);
@@ -176,9 +175,7 @@ public class SettingsManager : MonoBehaviour
         if (uiManager != null) uiManager.UpdateSpeedUnit();
     }
 
-    // --- YARDIMCI FONKSÝYONLAR ---
-
-    // Seçili butonu renklendirip, diðerini normale döndürür
+   
     private void UpdateButtonVisuals(Button selectedBtn, Button unselectedBtn)
     {
         if (selectedBtn != null) selectedBtn.image.color = selectedColor;
@@ -192,29 +189,29 @@ public class SettingsManager : MonoBehaviour
         if (musicSlider != null) musicSlider.value = PlayerPrefs.GetFloat("MusicVolumePref", 0f);
         if (engineSlider != null) engineSlider.value = PlayerPrefs.GetFloat("EngineVolumePref", 0f);
 
-        // Çözünürlük Butonlarýný Güncelle
+        // Çözünürlük Butonlarý
         int savedRes = PlayerPrefs.GetInt("ResolutionPref", 1080);
         if (savedRes == 1080) { Screen.SetResolution(1920, 1080, Screen.fullScreen); UpdateButtonVisuals(btnResHD, btnResQHD); }
         else if (savedRes == 1440) { Screen.SetResolution(2560, 1440, Screen.fullScreen); UpdateButtonVisuals(btnResQHD, btnResHD); }
 
-        // FPS Butonlarýný Güncelle
+        // FPS Butonlarý
         int savedFPS = PlayerPrefs.GetInt("FPSPref", 60);
         Application.targetFrameRate = savedFPS;
         if (savedFPS == 60) UpdateButtonVisuals(btnFPS60, btnFPS120);
         else UpdateButtonVisuals(btnFPS120, btnFPS60);
 
-        // Kalite Butonlarýný Güncelle
+        // Kalite Butonlarý
         int savedQual = PlayerPrefs.GetInt("QualityPref", 5);
         QualitySettings.SetQualityLevel(savedQual);
         if (savedQual == 0) UpdateButtonVisuals(btnQualLow, btnQualUltra);
         else UpdateButtonVisuals(btnQualUltra, btnQualLow);
 
-        // Kamera Butonlarýný Güncelle
+        // Kamera Butonlarý
         int savedCam = PlayerPrefs.GetInt("CameraViewPref", 1);
         if (savedCam == 0) UpdateButtonVisuals(btnCam1st, btnCam3rd);
         else UpdateButtonVisuals(btnCam3rd, btnCam1st);
 
-        // Hýz Birimi Butonlarýný Güncelle
+        // Hýz Birimi Butonlarý
         string savedUnit = PlayerPrefs.GetString("SpeedUnitPref", "KMH");
         if (savedUnit == "KMH") UpdateButtonVisuals(btnUnitKMH, btnUnitMPH);
         else UpdateButtonVisuals(btnUnitMPH, btnUnitKMH);
