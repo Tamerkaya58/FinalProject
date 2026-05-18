@@ -11597,6 +11597,7 @@ GameObject:
   - component: {fileID: 4665477228744537687}
   - component: {fileID: 4665477228744537688}
   - component: {fileID: 4665477228744537689}
+  - component: {fileID: 4665477228744537690}
   m_Layer: 0
   m_Name: Car
   m_TagString: Player
@@ -11974,17 +11975,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550634c34a74c744bba9699bdebef757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  motorForce: 1500
-  breakForce: 1500
-  maxSteerAngle: 30
-  frontLeftWheelCollider: {fileID: 4807872924854491846}
-  frontRightWheelCollider: {fileID: 4807232523863797316}
-  rearLeftWheelCollider: {fileID: 4807626684754599072}
-  rearRightWheelCollider: {fileID: 4807985821610210614}
-  frontLeftWheelTransform: {fileID: 4665415613806220822}
-  frontRightWheelTransform: {fileID: 4665512273077429082}
-  rearLeftWheelTransform: {fileID: 4665169523713684424}
-  rearRightWheelTransform: {fileID: 4665409947965175656}
 --- !u!82 &4665477228744537689
 AudioSource:
   m_ObjectHideFlags: 0
@@ -12081,6 +12071,104 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4665477228744537690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4662950451959622188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25f992380a3f48e43a0f3f5dbd311170, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxMotorTorque: 2500
+  maxSpeed: 200
+  torqueCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.9
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.6
+      value: 0.65
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.85
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  brakeForce: 3000
+  handbrakeForce: 4500
+  maxSteerAngle: 35
+  highSpeedSteerFactor: 0.6
+  steerSmoothing: 8
+  normalRearGrip: 1.5
+  driftGripMultiplier: 0.4
+  gripRecoverySpeed: 5
+  minDriftSpeed: 25
+  driftStabilityAssist: 0.35
+  counterSteerStrength: 1
+  maxDriftAngle: 50
+  vehicleMass: 1400
+  centerOfMassOffset: {x: 0, y: -0.5, z: -0.2}
+  downforceCoefficient: 2
+  linearDrag: 0.15
+  overrideRigidbodyDrag: 1
+  frontLeftWheelCollider: {fileID: 4807872924854491846}
+  frontRightWheelCollider: {fileID: 4807232523863797316}
+  rearLeftWheelCollider: {fileID: 4807626684754599072}
+  rearRightWheelCollider: {fileID: 4807985821610210614}
+  frontLeftWheelTransform: {fileID: 4665415613806220822}
+  frontRightWheelTransform: {fileID: 4665512273077429082}
+  rearLeftWheelTransform: {fileID: 4665169523713684424}
+  rearRightWheelTransform: {fileID: 4665409947965175656}
+  autoRecoverFromFlip: 1
+  flipRecoveryDelay: 1
+  flipRecoveryHeight: 1.5
+  reverseSteerMultiplier: 1.3
+  reverseFrictionDamping: 0.4
+  reverseTorqueCompensation: 800
+  showDebugInfo: 0
+  reverseTransitionSpeed: 6
 --- !u!4 &4665489378692687918
 Transform:
   m_ObjectHideFlags: 0

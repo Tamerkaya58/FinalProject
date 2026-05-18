@@ -26,8 +26,9 @@ public class RoadChunk : MonoBehaviour
 
         ClearChunk();
 
-        // Delegate spawning logic to the new decoupled spawner class
-        ChunkSpawner.SpawnContent(CurrentLevelData, SpawnedObjectsHolder, RoadBoundaryX, ChunkLength, this.transform.position.z, ChunkMaxCapacity);
+        // Delegate spawning logic to the new decoupled spawner class.
+        // Pass 'this' as coroutine host so ChunkSpawner can run physics-unlock on the main thread.
+        ChunkSpawner.SpawnContent(CurrentLevelData, SpawnedObjectsHolder, RoadBoundaryX, ChunkLength, this.transform.position.z, ChunkMaxCapacity, this);
     }
 
     public void ClearChunk()

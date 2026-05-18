@@ -37,10 +37,13 @@ public class SimcadeCarController : MonoBehaviour
     // DİREKSİYON
     // =====================================================================
     [Header("=== Direksiyon ===")]
-    [SerializeField] private float maxSteerAngle = 35f;
+    [SerializeField] private float maxSteerAngle = 42f;
 
-    [Tooltip("Yüksek hızda direksiyon açısı çarpanı (0-1).")]
-    [SerializeField, Range(0.2f, 1f)] private float highSpeedSteerFactor = 0.5f;
+    [Tooltip("Yüksek hızda direksiyon açısı çarpanı (0-1). Daha yüksek = yüksek hızda daha çevik.")]
+    [SerializeField, Range(0.2f, 1f)] private float highSpeedSteerFactor = 0.65f;
+
+    [Tooltip("Direksiyon yumuşatma hızı (derece/saniye cinsinden değil, lerp katsayısı). Yüksek = anlık tepki, düşük = yumuşak.")]
+    [SerializeField, Range(2f, 20f)] private float steerSmoothing = 6f;
 
     // =====================================================================
     // DRİFT & YOL TUTUŞ
@@ -82,6 +85,12 @@ public class SimcadeCarController : MonoBehaviour
 
     [Tooltip("Yüksek hızda yere yapışma kuvveti.")]
     [SerializeField] private float downforceCoefficient = 2.0f;
+
+    [Tooltip("Rigidbody linear drag (hava/yol sürtünmesi — off-throttle yavaşlama). 0'dan küçük bırakılırsa Inspector'daki Rigidbody.drag korunur.")]
+    [SerializeField] private float linearDrag = 0.15f;
+
+    [Tooltip("Inspector'daki Rigidbody.drag değerinin script tarafından override edilip edilmeyeceği.")]
+    [SerializeField] private bool overrideRigidbodyDrag = true;
 
     // =====================================================================
     // TEKERLEK REFERANSLARI
@@ -139,6 +148,12 @@ public class SimcadeCarController : MonoBehaviour
     private WheelFrictionCurve origFrontFriction;
     private bool isReversing;
 
+    // Geri↔ileri vites geçişini yumuşatmak için 0..1 blend değeri.
+    // 0 = tam ileri sürüş modu, 1 = tam geri vites modu.
+    private float reverseBlend;
+    [Tooltip("Geri↔ileri vites moduna geçiş yumuşatma hızı (0-1 saniye başına). Yüksek = anlık geçiş.")]
+    [SerializeField, Range(2f, 15f)] private float reverseTransitionSpeed = 6f;
+
     // =====================================================================
     // LIFECYCLE
     // =====================================================================
@@ -148,7 +163,10 @@ public class SimcadeCarController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.mass = vehicleMass;
         rb.centerOfMass = centerOfMassOffset;
-        rb.drag = 0.15f; // Hava/Yol sürtünmesi (off-throttle yavaşlama için)
+        if (overrideRigidbodyDrag)
+        {
+            rb.drag = linearDrag; // Hava/Yol sürtünmesi (off-throttle yavaşlama için)
+        }
 
         origRearFriction = rearLeftWheelCollider.sidewaysFriction;
         origFrontFriction = frontLeftWheelCollider.sidewaysFriction;
@@ -174,6 +192,11 @@ public class SimcadeCarController : MonoBehaviour
         // --- Geri gitme tespiti ---
         float forwardDot = Vector3.Dot(rb.velocity, transform.forward);
         isReversing = forwardDot < -0.5f || (isReversing && forwardDot < 0.5f); // Hysteresis
+
+        // Mod geçişi yumuşatma — 0=ileri, 1=geri. Anlık atlamayı engeller.
+        float targetBlend = isReversing ? 1f : 0f;
+        reverseBlend = Mathf.MoveTowards(reverseBlend, targetBlend,
+                                         Time.fixedDeltaTime * reverseTransitionSpeed);
 
         if (isReversing)
         {
@@ -224,22 +247,24 @@ public class SimcadeCarController : MonoBehaviour
         frontRightWheelCollider.steerAngle = reverseSteerAngle;
 
         // --- İtme Kuvveti (Rigidbody ile) ---
+        // reverseBlend (0→1) ile çarpılarak ileri↔geri vites geçişinde sert kuvvet sıçraması engellenir.
         if (verticalInput < -0.05f)
         {
             float reverseForce = Mathf.Abs(verticalInput) * maxMotorTorque * 0.7f;
             float maxReverseSpeed = 60f;
             float speedLimiter = 1f - Mathf.Clamp01(currentSpeedKmh / maxReverseSpeed);
-            rb.AddForce(-transform.forward * reverseForce * speedLimiter, ForceMode.Force);
+            rb.AddForce(-transform.forward * reverseForce * speedLimiter * reverseBlend, ForceMode.Force);
         }
         else if (verticalInput > 0.1f)
         {
             // İleri gaz → fren etkisi
-            rb.AddForce(transform.forward * brakeForce * verticalInput * 0.5f, ForceMode.Force);
+            rb.AddForce(transform.forward * brakeForce * verticalInput * 0.5f * reverseBlend, ForceMode.Force);
         }
         else
         {
             // Gaz yok → doğal yavaşlama (yol sürtünmesi + motor freni simülasyonu)
-            rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, Time.fixedDeltaTime * 2f);
+            // Lerp hızı reverseBlend ile yumuşatılır.
+            rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, Time.fixedDeltaTime * 2f * reverseBlend);
         }
 
         // --- Direksiyon (Angular Velocity ile — güçlendirilmiş) ---
@@ -308,7 +333,11 @@ public class SimcadeCarController : MonoBehaviour
     {
         float speedRatio = Mathf.Clamp01(currentSpeedKmh / maxSpeed);
         float steerLimit = Mathf.Lerp(1f, highSpeedSteerFactor, speedRatio);
-        currentSteerAngle = horizontalInput * maxSteerAngle * steerLimit;
+        float targetSteerAngle = horizontalInput * maxSteerAngle * steerLimit;
+
+        // Smooth steering — anlık değişim yerine target'a doğru lerp ile yumuşatma.
+        currentSteerAngle = Mathf.Lerp(currentSteerAngle, targetSteerAngle,
+                                       Time.fixedDeltaTime * steerSmoothing);
 
         frontLeftWheelCollider.steerAngle = currentSteerAngle;
         frontRightWheelCollider.steerAngle = currentSteerAngle;

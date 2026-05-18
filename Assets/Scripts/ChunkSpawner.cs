@@ -1,12 +1,12 @@
+using System.Collections;
 using UnityEngine;
-using System.Threading.Tasks;
 
 public static class ChunkSpawner
 {
-    public static void SpawnContent(LevelData TargetLevelData, Transform HolderTransform, float RoadBoundaryX, float ChunkLength, float ChunkStartZ, int ChunkMaxCapacity)
+    public static void SpawnContent(LevelData TargetLevelData, Transform HolderTransform, float RoadBoundaryX, float ChunkLength, float ChunkStartZ, int ChunkMaxCapacity, MonoBehaviour CoroutineHost)
     {
         float TotalWeight = CalculateTotalWeight(TargetLevelData);
-        PlaceObstacles(TargetLevelData, HolderTransform, RoadBoundaryX, ChunkLength, ChunkStartZ, ChunkMaxCapacity, TotalWeight);
+        PlaceObstacles(TargetLevelData, HolderTransform, RoadBoundaryX, ChunkLength, ChunkStartZ, ChunkMaxCapacity, TotalWeight, CoroutineHost);
         PlaceCoins(TargetLevelData, HolderTransform, RoadBoundaryX, ChunkLength, ChunkStartZ);
     }
 
@@ -22,7 +22,7 @@ public static class ChunkSpawner
         return TotalWeightValue;
     }
 
-    private static void PlaceObstacles(LevelData TargetLevelData, Transform HolderTransform, float RoadBoundaryX, float ChunkLength, float ChunkStartZ, int ChunkMaxCapacity, float TotalWeight)
+    private static void PlaceObstacles(LevelData TargetLevelData, Transform HolderTransform, float RoadBoundaryX, float ChunkLength, float ChunkStartZ, int ChunkMaxCapacity, float TotalWeight, MonoBehaviour CoroutineHost)
     {
         if (TargetLevelData.SpawnableObjects == null || TargetLevelData.SpawnableObjects.Count == 0)
             return;
@@ -71,7 +71,10 @@ public static class ChunkSpawner
                     ObstacleRigidbody.angularVelocity = Vector3.zero;
 
                     // Unlock the physics shortly after it perfectly settles on the coordinate
-                    UnlockPhysicsAsync(ObstacleRigidbody);
+                    if (CoroutineHost != null && CoroutineHost.isActiveAndEnabled)
+                    {
+                        CoroutineHost.StartCoroutine(UnlockPhysicsRoutine(ObstacleRigidbody));
+                    }
                 }
             }
 
@@ -121,24 +124,17 @@ public static class ChunkSpawner
         return TargetLevelData.SpawnableObjects[TargetLevelData.SpawnableObjects.Count - 1];
     }
 
-    // --- ASYNCHRONOUS PHYSICS UNLOCKER ---
-    private static async void UnlockPhysicsAsync(Rigidbody TargetRigidbody)
+    // --- COROUTINE-BASED PHYSICS UNLOCKER (main thread, safe) ---
+    private static IEnumerator UnlockPhysicsRoutine(Rigidbody TargetRigidbody)
     {
-        try
+        // Wait ~150ms (0.15s) on Unity's main thread, giving the physics loop
+        // enough time to register the colliders and settle the static position.
+        yield return new WaitForSeconds(0.15f);
+
+        // Object may have been destroyed (chunk recycled / scene unloaded) during the wait.
+        if (TargetRigidbody != null && TargetRigidbody.gameObject != null)
         {
-            // Delay for 150 milliseconds. This gives Unity's internal physics loop 
-            // enough time to register the colliders and static position.
-            await Task.Delay(150);
-            
-            // Check if the object still exists (hasn't been destroyed or disabled during delay)
-            if (TargetRigidbody != null && TargetRigidbody.gameObject != null)
-            {
-                TargetRigidbody.isKinematic = false; // Gravity takes control now.
-            }
-        }
-        catch (System.Exception LoggedException)
-        {
-            Debug.LogWarning($"Physics unlock task interrupted: {LoggedException.Message}");
+            TargetRigidbody.isKinematic = false; // Gravity takes control now.
         }
     }
 }

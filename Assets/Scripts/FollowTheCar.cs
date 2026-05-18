@@ -4,6 +4,10 @@ public class FollowTheCar : MonoBehaviour
 {
     public GameObject car;
     public GameObject barrier;
+
+    [Tooltip("Şerit çizgisinin yol yüzeyinden Y offset'i (z-fighting'i engellemek için küçük bir değer).")]
+    [SerializeField] private float laneYOffset = 0.01f;
+
     void Start()
     {
         PlaceLineSeperators();
@@ -19,7 +23,7 @@ public class FollowTheCar : MonoBehaviour
 
     void PlaceLineSeperators()
     {
-        transform.position = new Vector3(0, 0, car.transform.position.z - 10);
+        transform.position = new Vector3(0, laneYOffset, car.transform.position.z - 10);
     }
 
     void PlaceBarriers()
