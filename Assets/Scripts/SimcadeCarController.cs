@@ -179,6 +179,8 @@ public class SimcadeCarController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
         isHandbrake = Input.GetKey(KeyCode.Space);
+
+        Debug.Log("Vertical Input = " + verticalInput);
     }
 
     private void FixedUpdate()
@@ -303,6 +305,9 @@ public class SimcadeCarController : MonoBehaviour
 
     private void HandleMotor()
     {
+        Debug.Log("Rear Torque: " + rearLeftWheelCollider.motorTorque +
+          " | Grounded: " + rearLeftWheelCollider.isGrounded +
+          " | Brake: " + rearLeftWheelCollider.brakeTorque);
         float speedRatio = Mathf.Clamp01(currentSpeedKmh / maxSpeed);
         float torqueMult = torqueCurve.Evaluate(speedRatio);
 
