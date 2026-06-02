@@ -1546,8 +1546,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168017105}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.82, y: 1, z: 1}
+  m_LocalPosition: {x: -0.03, y: 0, z: 0}
+  m_LocalScale: {x: 0.68, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 827086724}
@@ -8290,8 +8290,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f992380a3f48e43a0f3f5dbd311170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxMotorTorque: 20000
-  maxSpeed: 220
+  maxMotorTorque: 4000
+  maxSpeed: 200
   torqueCurve:
     serializedVersion: 2
     m_Curve:
@@ -8358,7 +8358,7 @@ MonoBehaviour:
   vehicleMass: 1400
   centerOfMassOffset: {x: 0, y: -0.5, z: -0.2}
   downforceCoefficient: 2
-  linearDrag: 0.15
+  linearDrag: 0.01
   overrideRigidbodyDrag: 1
   frontLeftWheelCollider: {fileID: 827086725}
   frontRightWheelCollider: {fileID: 1727192855}

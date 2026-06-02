@@ -117,23 +117,20 @@ public class SimcadeCarController : MonoBehaviour
         if (CheckAndHandleFlip())
             return;
 
-        float forwardDot = Vector3.Dot(rb.velocity, transform.forward);
-
-        // W BASILIYSA GERİ VİTESTEN KESİN ÇIK
         if (verticalInput > 0.1f)
         {
             isReversing = false;
             reverseBlend = 0f;
             ClearBrakes();
         }
-        // S BASILIYSA VE ARAÇ İLERİ GİTMİYORSA GERİ VİTES MODUNA GEÇ
-        else if (verticalInput < -0.1f && forwardDot < 1f)
+        else if (verticalInput < -0.1f)
         {
             isReversing = true;
+            ClearBrakes();
         }
-        // TUŞ YOKSA, ARAÇ GERİ KAYIYORSA GERİ MODDA KALABİLİR
-        else if (Mathf.Abs(verticalInput) < 0.1f)
+        else
         {
+            float forwardDot = Vector3.Dot(rb.velocity, transform.forward);
             isReversing = forwardDot < -0.5f;
         }
 
@@ -184,8 +181,10 @@ public class SimcadeCarController : MonoBehaviour
             float maxReverseSpeed = 60f;
             float speedLimiter = 1f - Mathf.Clamp01(currentSpeedKmh / maxReverseSpeed);
 
+            float effectiveBlend = Mathf.Max(reverseBlend, 0.35f);
+
             rb.AddForce(
-                -transform.forward * reverseForce * speedLimiter * reverseBlend,
+                -transform.forward * reverseForce * speedLimiter * effectiveBlend,
                 ForceMode.Force
             );
         }
@@ -316,9 +315,7 @@ public class SimcadeCarController : MonoBehaviour
         if (!isHandbrake && isDrifting)
         {
             if (Mathf.Abs(slipAngle) > 8f && currentSpeedKmh > minDriftSpeed)
-            {
                 targetGrip = normalRearGrip * driftGripMultiplier * 1.3f;
-            }
             else
             {
                 isDrifting = false;

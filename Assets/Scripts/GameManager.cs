@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
-
     public static bool restartFromTryAgain = false;
 
     public Rigidbody carRB;
@@ -18,7 +17,7 @@ public class GameManager : MonoBehaviour
     public static int level = 1;
     public int points;
 
-    private bool hasMovedOnce = false;
+    private bool playerStartedDriving = false;
     private float stillTimer = 0f;
 
     private float moveStartSpeed = 5f;
@@ -43,17 +42,12 @@ public class GameManager : MonoBehaviour
         SetLevelByScene();
 
         gameStarted = true;
-        hasMovedOnce = false;
+        playerStartedDriving = false;
         stillTimer = 0f;
 
-        if (mainMenu != null)
-            mainMenu.SetActive(false);
-
-        if (loseScreen != null)
-            loseScreen.SetActive(false);
-
-        if (winScreen != null)
-            winScreen.SetActive(false);
+        if (mainMenu != null) mainMenu.SetActive(false);
+        if (loseScreen != null) loseScreen.SetActive(false);
+        if (winScreen != null) winScreen.SetActive(false);
 
         restartFromTryAgain = false;
     }
@@ -86,11 +80,11 @@ public class GameManager : MonoBehaviour
 
         float speedKmh = carRB.velocity.magnitude * 5f;
 
-        if (!hasMovedOnce)
+        if (!playerStartedDriving)
         {
             if (speedKmh >= moveStartSpeed)
             {
-                hasMovedOnce = true;
+                playerStartedDriving = true;
                 stillTimer = 0f;
             }
 
@@ -116,7 +110,7 @@ public class GameManager : MonoBehaviour
     {
         gameStarted = false;
         stillTimer = 0f;
-        hasMovedOnce = false;
+        playerStartedDriving = false;
 
         Time.timeScale = 0f;
 
@@ -130,7 +124,7 @@ public class GameManager : MonoBehaviour
 
         gameStarted = true;
         stillTimer = 0f;
-        hasMovedOnce = false;
+        playerStartedDriving = false;
 
         if (mainMenu != null) mainMenu.SetActive(false);
         if (loseScreen != null) loseScreen.SetActive(false);
