@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,8 +18,11 @@ public class GameManager : MonoBehaviour
     public static int level = 1;
     public int points;
 
+    private bool hasMovedOnce = false;
     private float stillTimer = 0f;
-    private float stillSpeedLimit = 0.25f;
+
+    private float moveStartSpeed = 5f;
+    private float stopSpeedLimit = 1f;
     private float loseDelay = 3f;
 
     private void Awake()
@@ -34,26 +38,24 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = 1f;
+
+        SetLevelByScene();
+
+        gameStarted = true;
+        hasMovedOnce = false;
         stillTimer = 0f;
 
-        if (mainMenu == null)
-        {
-            // If there's no main menu in this scene, we auto-start
-            gameStarted = true;
-            if (loseScreen != null) loseScreen.SetActive(false);
-            if (winScreen != null) winScreen.SetActive(false);
-        }
+        if (mainMenu != null)
+            mainMenu.SetActive(false);
 
-        if (restartFromTryAgain)
-        {
-            restartFromTryAgain = false;
+        if (loseScreen != null)
+            loseScreen.SetActive(false);
 
-            gameStarted = true;
+        if (winScreen != null)
+            winScreen.SetActive(false);
 
-            if (mainMenu != null) mainMenu.SetActive(false);
-            if (loseScreen != null) loseScreen.SetActive(false);
-            if (winScreen != null) winScreen.SetActive(false);
-        }
+        restartFromTryAgain = false;
     }
 
     private void Update()
@@ -61,30 +63,41 @@ public class GameManager : MonoBehaviour
         if (!gameStarted)
             return;
 
-        CheckLevelOutOfArray();
         CheckLose();
     }
 
-    private void CheckLevelOutOfArray()
+    private void SetLevelByScene()
     {
-        if (level > 3)
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        if (sceneName == "Level_City")
             level = 1;
+        else if (sceneName == "Level_Desert")
+            level = 2;
+        else if (sceneName == "Level_Snow")
+            level = 3;
     }
 
     private void CheckLose()
     {
-        if (mainMenu != null && mainMenu.activeInHierarchy) return;
-        if (winScreen != null && winScreen.activeInHierarchy) return;
         if (loseScreen != null && loseScreen.activeInHierarchy) return;
+        if (winScreen != null && winScreen.activeInHierarchy) return;
         if (carRB == null) return;
 
-        if (carRB.transform.position.y < -3f)
+        float speedKmh = carRB.velocity.magnitude * 5f;
+
+        if (!hasMovedOnce)
         {
-            LoseGame();
+            if (speedKmh >= moveStartSpeed)
+            {
+                hasMovedOnce = true;
+                stillTimer = 0f;
+            }
+
             return;
         }
 
-        if (carRB.velocity.magnitude < stillSpeedLimit)
+        if (speedKmh <= stopSpeedLimit)
         {
             stillTimer += Time.deltaTime;
 
@@ -103,6 +116,7 @@ public class GameManager : MonoBehaviour
     {
         gameStarted = false;
         stillTimer = 0f;
+        hasMovedOnce = false;
 
         Time.timeScale = 0f;
 
@@ -112,16 +126,14 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        Time.timeScale = 1f;
+
         gameStarted = true;
         stillTimer = 0f;
+        hasMovedOnce = false;
 
-        if (mainMenu != null)
-            mainMenu.SetActive(false);
-
-        if (loseScreen != null)
-            loseScreen.SetActive(false);
-
-        if (winScreen != null)
-            winScreen.SetActive(false);
+        if (mainMenu != null) mainMenu.SetActive(false);
+        if (loseScreen != null) loseScreen.SetActive(false);
+        if (winScreen != null) winScreen.SetActive(false);
     }
 }

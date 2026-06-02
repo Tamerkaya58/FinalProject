@@ -732,7 +732,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &143654035
 GameObject:
@@ -3390,7 +3390,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &617853698
 GameObject:
@@ -4209,7 +4209,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &738611477
 GameObject:
@@ -4513,7 +4513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carRB: {fileID: 4643886660621039656}
-  mainMenu: {fileID: 0}
+  mainMenu: {fileID: 697206206}
   loseScreen: {fileID: 241321924}
   winScreen: {fileID: 943092647}
   gameStarted: 0
@@ -4531,7 +4531,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &794973979
 MonoBehaviour:
@@ -4744,10 +4744,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d335b5022bc7c5488d4707ebab12b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  car: {fileID: 0}
-  mainMenu: {fileID: 0}
-  loseMessage: {fileID: 0}
-  winMessage: {fileID: 0}
+  car: {fileID: 4662950451959622188}
+  mainMenu: {fileID: 697206206}
+  loseMessage: {fileID: 241321924}
+  winMessage: {fileID: 943092647}
   uiElementSpeed: {fileID: 1759710155}
   uiElementPoints: {fileID: 1297210181}
   uiElementLevel: {fileID: 617853700}
@@ -4765,7 +4765,7 @@ Transform:
   m_Children:
   - {fileID: 650607403}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &913716508
 GameObject:
@@ -10497,6 +10497,75 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1001 &1258221139333282284
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 178357583531601370, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 397f314fbcd7c2343896c91bbd26efff, type: 2}
+    - target: {fileID: 291045171863453401, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 397f314fbcd7c2343896c91bbd26efff, type: 2}
+    - target: {fileID: 5112872901380229868, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_Materials.Array.data[4]
+      value: 
+      objectReference: {fileID: 2100000, guid: 54c8affcd2344a148999a26b8e5f7a24, type: 2}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 17.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.8234615
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -18.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362851205519853851, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882929398945485729, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
+      propertyPath: m_Name
+      value: smercedesx
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6a4d88b73a321e44685f016fb264fb1e, type: 3}
 --- !u!64 &4635602762888848754
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10519,7 +10588,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4662950451959622188}
   serializedVersion: 2
-  m_Mass: 999
+  m_Mass: 1800
   m_Drag: 0.01
   m_AngularDrag: 5
   m_UseGravity: 1
@@ -11635,7 +11704,7 @@ Transform:
   - {fileID: 4665590427922213256}
   - {fileID: 4665727398603719226}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4665477228744537687
 BoxCollider:
@@ -11758,7 +11827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f992380a3f48e43a0f3f5dbd311170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxMotorTorque: 2500
+  maxMotorTorque: 4000
   maxSpeed: 200
   torqueCurve:
     serializedVersion: 2
@@ -11826,7 +11895,7 @@ MonoBehaviour:
   vehicleMass: 1400
   centerOfMassOffset: {x: 0, y: -0.5, z: -0.2}
   downforceCoefficient: 2
-  linearDrag: 0.15
+  linearDrag: 0.05
   overrideRigidbodyDrag: 1
   frontLeftWheelCollider: {fileID: 4807872924854491846}
   frontRightWheelCollider: {fileID: 4807232523863797316}
@@ -11840,10 +11909,8 @@ MonoBehaviour:
   flipRecoveryDelay: 1
   flipRecoveryHeight: 1.5
   reverseSteerMultiplier: 1.3
-  reverseFrictionDamping: 0.4
-  reverseTorqueCompensation: 800
-  showDebugInfo: 0
   reverseTransitionSpeed: 6
+  showDebugInfo: 0
 --- !u!4 &4665489378692687918
 Transform:
   m_ObjectHideFlags: 0
