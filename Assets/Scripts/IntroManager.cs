@@ -7,6 +7,8 @@ public class IntroManager : MonoBehaviour
     public GameObject introCanvas;
     public VideoPlayer videoPlayer;
 
+    public AudioSource musicPlayer; // EKLENDÝ
+
     void Start()
     {
 #if UNITY_EDITOR
@@ -14,6 +16,9 @@ public class IntroManager : MonoBehaviour
         {
             introCanvas.SetActive(false);
             mainMenu.SetActive(false);
+
+            if (musicPlayer != null)
+                musicPlayer.Play();
 
             StartButtonManager startBtn = FindObjectOfType<StartButtonManager>(true);
             if (startBtn != null)
@@ -27,6 +32,9 @@ public class IntroManager : MonoBehaviour
         mainMenu.SetActive(false);
         introCanvas.SetActive(true);
 
+        if (musicPlayer != null)
+            musicPlayer.Stop();
+
         videoPlayer.loopPointReached += IntroFinished;
         videoPlayer.Play();
     }
@@ -35,5 +43,8 @@ public class IntroManager : MonoBehaviour
     {
         introCanvas.SetActive(false);
         mainMenu.SetActive(true);
+
+        if (musicPlayer != null)
+            musicPlayer.Play();
     }
 }

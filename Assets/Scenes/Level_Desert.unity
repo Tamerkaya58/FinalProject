@@ -3121,7 +3121,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -101.4, y: -174.92}
+  m_AnchoredPosition: {x: -103.5, y: -174.92}
   m_SizeDelta: {x: 157.3628, y: 44.24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &384508824
@@ -4274,7 +4274,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 285.3, y: -58.2}
+  m_AnchoredPosition: {x: 285.3, y: -60.31}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &488441697
@@ -4336,7 +4336,7 @@ MonoBehaviour:
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -50
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -4824,7 +4824,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 98.6, y: -174.92043}
+  m_AnchoredPosition: {x: 93, y: -174.92043}
   m_SizeDelta: {x: 160, y: 44.2408}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &540777650
@@ -5957,7 +5957,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 282.6, y: 74.7}
+  m_AnchoredPosition: {x: 282.6, y: 78.56}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &688232244
@@ -6019,7 +6019,7 @@ MonoBehaviour:
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -50
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -6578,7 +6578,7 @@ MonoBehaviour:
   loseHighScoreText: {fileID: 1755019304}
   loseDistanceText: {fileID: 488441697}
   inGameScoreText: {fileID: 1195749761}
-  inGameDistanceText: {fileID: 2044408196}
+  inGameDistanceText: {fileID: 478046386}
   pointsPerSecond: 50
   gameStarted: 0
   currentPoints: 0
@@ -12711,7 +12711,7 @@ MonoBehaviour:
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -50
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0

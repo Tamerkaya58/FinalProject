@@ -174,13 +174,13 @@ public class GameManager : MonoBehaviour
 
         // UI Text atamaları
         if (loseScoreText != null)
-            loseScoreText.text = "SKORUNUZ:\n" + finalScore.ToString("N0");
+            loseScoreText.text = "Score:\n" + finalScore.ToString("N0");
 
         if (loseHighScoreText != null)
-            loseHighScoreText.text = "EN YÜKSEK SKOR:\n" + highScore.ToString("N0");
+            loseHighScoreText.text = "Highest Score:\n" + highScore.ToString("N0");
 
         if (loseDistanceText != null)
-            loseDistanceText.text = "GİDİLEN MESAFE:\n" + distanceKm.ToString("F1") + " km";
+            loseDistanceText.text = "Distance:\n" + distanceKm.ToString("F1") + " km";
 
         Time.timeScale = 0f; // Oyunu durdur
 

@@ -309,7 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -555,7 +555,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 4316147044152164802, guid: 51fe5f6a416b80e479bdce1af6b8131d, type: 2}
   m_audioClip: {fileID: 8300000, guid: b25dbab12a00b394f98cbec3885d259e, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -5177,7 +5177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -7580,6 +7580,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1213192298}
   - component: {fileID: 1213192297}
+  - component: {fileID: 1213192299}
   m_Layer: 0
   m_Name: StartManager
   m_TagString: Untagged
@@ -7618,6 +7619,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1213192299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1213192296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5da63e7799a5c6047b2471ee21900383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenu: {fileID: 694092831}
+  introCanvas: {fileID: 1346203608}
+  videoPlayer: {fileID: 1123138398}
+  musicPlayer: {fileID: 119268010}
 --- !u!1 &1221465264
 GameObject:
   m_ObjectHideFlags: 0
@@ -7866,7 +7883,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -86.81625, y: -22.7259}
+  m_AnchoredPosition: {x: -83.6, y: -22.7259}
   m_SizeDelta: {x: 77.2711, y: 19.2092}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1258895584
@@ -8426,7 +8443,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1346203609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8526,6 +8543,7 @@ MonoBehaviour:
   mainMenu: {fileID: 694092831}
   introCanvas: {fileID: 1346203608}
   videoPlayer: {fileID: 1123138398}
+  musicPlayer: {fileID: 0}
 --- !u!1 &1360722992
 GameObject:
   m_ObjectHideFlags: 0
