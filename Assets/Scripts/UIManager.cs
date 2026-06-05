@@ -45,7 +45,7 @@ public class UIManager : MonoBehaviour
     {
         if (rb == null) return;
 
-        float baseSpeed = rb.velocity.magnitude * 5f;
+        float baseSpeed = rb.velocity.magnitude * 3.6f; // Fiziğe uygun olması için 3.6f kullanıyoruz
 
         if (speedUnit == "MPH")
         {
@@ -59,7 +59,8 @@ public class UIManager : MonoBehaviour
 
         if (GameManager.instance != null)
         {
-            uiElementPoints.text = GameManager.instance.points.ToString();
+            // Puanı tam sayıya yuvarlayarak ekranda göster
+            uiElementPoints.text = Mathf.FloorToInt(GameManager.instance.currentPoints).ToString("N0");
             uiElementLevel.text = "LEVEL : " + GameManager.level.ToString();
         }
     }
@@ -87,7 +88,7 @@ public class UIManager : MonoBehaviour
     {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-#else
+#else        
         Application.Quit();
 #endif
     }

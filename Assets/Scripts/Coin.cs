@@ -8,9 +8,13 @@ public class Coin : MonoBehaviour
     {
         if (other.name == "Car")
         {
-            int speed = (int)other.GetComponent<Rigidbody>().velocity.magnitude * 5;
-            int points = speed * 5;
-            GameManager.instance.points += points;
+            // Aracın o anki hızına göre kazanılacak puanı hesapla
+            float speed = other.GetComponent<Rigidbody>().velocity.magnitude * 3.6f; // km/h cinsinden
+            float bonusPoints = speed * 5f;
+
+            // Puanı GameManager'daki yeni sisteme ekle
+            GameManager.instance.currentPoints += bonusPoints;
+
             Destroy(this.gameObject);
         }
     }
