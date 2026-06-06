@@ -34,3 +34,9 @@ MonoBehaviour:
     YOffset: 3.5
     DontModifyRigidbody: 1
     UsePrefabRotation: 1
+  - Name: Yellowstop
+    Prefab: {fileID: 8937465387522055700, guid: 36df65efcd5ab2a47ba0ec02bbcf069a, type: 3}
+    Weight: 1
+    YOffset: 0
+    DontModifyRigidbody: 1
+    UsePrefabRotation: 1

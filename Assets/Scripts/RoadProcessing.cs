@@ -52,31 +52,23 @@ public class RoadProcessing
         Bounds RoadBounds = new Bounds(BoundsTarget.transform.position, Vector3.zero);
         bool initialized = false;
 
-        Debug.Log($"--- Calculating Bounds for: {BoundsTarget.name} ---");
         // Hesaplamayı yaparken Trigger objelerini dışarıda bırakıyoruz
-        foreach (Renderer rend in BoundsTarget.GetComponentsInChildren<Renderer>())
+        Renderer[] renderers = BoundsTarget.GetComponentsInChildren<Renderer>();
+        for (int i = 0; i < renderers.Length; i++)
         {
-            string logMsg = $"Renderer found: {rend.gameObject.name} | Bounds Size: {rend.bounds.size} | Bounds Center: {rend.bounds.center}";
+            Renderer rend = renderers[i];
 
             // Eğer objede veya ebeveyninde RoadTrigger varsa, isminde "trigger" geçiyorsa veya Tag'i "Trigger" ise yoksay
-            if (rend.GetComponent<RoadTrigger>() != null || 
+            if (rend.GetComponent<RoadTrigger>() != null ||
                 rend.GetComponentInParent<RoadTrigger>() != null ||
                 rend.gameObject.name.ToLower().Contains("trigger") ||
                 rend.gameObject.CompareTag("Trigger"))
-            {
-                Debug.Log($"{logMsg} -> SKIPPED (Trigger component, name match, or Trigger tag)");
                 continue;
-            }
 
             // Ayrıca üzerinde isTrigger olan bir Collider varsa yine yoksay
             Collider col = rend.GetComponent<Collider>();
             if (col != null && col.isTrigger)
-            {
-                Debug.Log($"{logMsg} -> SKIPPED (isTrigger == true)");
                 continue;
-            }
-
-            Debug.Log($"{logMsg} -> INCLUDED in calculation");
 
             if (!initialized)
             {
@@ -88,7 +80,6 @@ public class RoadProcessing
                 RoadBounds.Encapsulate(rend.bounds);
             }
         }
-        Debug.Log($"--- Final Encapsulated Bounds Size: {RoadBounds.size} | Final ChunkLength (Z): {RoadBounds.size.z} ---");
 
         if (!initialized || RoadBounds.size == Vector3.zero)
         {
@@ -103,8 +94,6 @@ public class RoadProcessing
             float ActualWidth = RoadBounds.size.x;
             
             RoadBoundaryX = (ActualWidth / 2f) * 0.975f;
-            
-            Debug.Log($"ChunkLength: {ChunkLength}, RoadBoundaryX: {RoadBoundaryX}");
         }
     }
 

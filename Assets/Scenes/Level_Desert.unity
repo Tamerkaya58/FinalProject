@@ -719,7 +719,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 4316147044152164802, guid: 51fe5f6a416b80e479bdce1af6b8131d, type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 30f127eb87009804693d07039483e48c, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -3582,7 +3582,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Distance:'
+  m_text: 'Dist:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5d709fd4e1310b5408c8998f03dd964e, type: 2}
   m_sharedMaterial: {fileID: 967896223191225912, guid: 5d709fd4e1310b5408c8998f03dd964e, type: 2}
@@ -4090,7 +4090,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 115.69668, y: 13.678422, z: 34.97207, w: 13.623319}
+  m_margin: {x: 77.15477, y: 13.678422, z: 34.97207, w: 13.623319}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4873,7 +4873,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 525525155}
         m_TargetAssemblyTypeName: UIManager, GameScripts
-        m_MethodName: QuitApp
+        m_MethodName: ReturnToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11386,6 +11386,7 @@ MonoBehaviour:
   mainMenu: {fileID: 0}
   loseScreen: {fileID: 1967839441}
   winScreen: {fileID: 772285216}
+  musicPlayer: {fileID: 119268010}
   loseScoreText: {fileID: 688232244}
   loseHighScoreText: {fileID: 1755019304}
   loseDistanceText: {fileID: 488441697}
@@ -15601,7 +15602,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Quit
+  m_text: Main Menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5d709fd4e1310b5408c8998f03dd964e, type: 2}
   m_sharedMaterial: {fileID: 967896223191225912, guid: 5d709fd4e1310b5408c8998f03dd964e, type: 2}
@@ -15628,8 +15629,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34.9
-  m_fontSizeBase: 34.9
+  m_fontSize: 28.2
+  m_fontSizeBase: 28.2
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -18979,13 +18980,14 @@ GameObject:
   - component: {fileID: 1967839442}
   - component: {fileID: 1967839444}
   - component: {fileID: 1967839443}
+  - component: {fileID: 1967839445}
   m_Layer: 5
   m_Name: LoseMessage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1967839442
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19050,6 +19052,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1967839441}
   m_CullTransparentMesh: 1
+--- !u!114 &1967839445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967839441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d335b5022bc7c5488d4707ebab12b11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  car: {fileID: 0}
+  mainMenu: {fileID: 961284381}
+  loseMessage: {fileID: 0}
+  winMessage: {fileID: 0}
+  uiElementSpeed: {fileID: 0}
+  uiElementPoints: {fileID: 0}
+  uiElementLevel: {fileID: 0}
 --- !u!1 &1975986921
 GameObject:
   m_ObjectHideFlags: 0

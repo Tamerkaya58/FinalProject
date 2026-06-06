@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro; // TextMeshPro kullanımı için kütüphaneyi ekledik
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,23 +14,24 @@ public class GameManager : MonoBehaviour
     public GameObject loseScreen;
     public GameObject winScreen;
 
-    [Header("=== Lose Screen UI Textleri ===")]
-    public TextMeshProUGUI loseScoreText;       // Kazanılan Puan
-    public TextMeshProUGUI loseHighScoreText;   // En Yüksek Puan
-    public TextMeshProUGUI loseDistanceText;    // Gidilen Mesafe (km)
+    [Header("=== Ses ===")]
+    public AudioSource musicPlayer;
 
-    [Header("=== Oyun İçi UI Textleri (İsteğe Bağlı) ===")]
-    public TextMeshProUGUI inGameScoreText;     // Oynarken skoru görmek istersen
-    public TextMeshProUGUI inGameDistanceText;  // Oynarken mesafeyi görmek istersen
+    [Header("=== Lose Screen UI Textleri ===")]
+    public TextMeshProUGUI loseScoreText;
+    public TextMeshProUGUI loseHighScoreText;
+    public TextMeshProUGUI loseDistanceText;
+
+    [Header("=== Oyun İçi UI Textleri ===")]
+    public TextMeshProUGUI inGameScoreText;
+    public TextMeshProUGUI inGameDistanceText;
 
     [Header("=== Puan Ayarları ===")]
-    public float pointsPerSecond = 50f; // Saniyede kazanılacak puan
+    public float pointsPerSecond = 50f;
 
     public bool gameStarted = false;
-
     public static int level = 1;
 
-    // Skor ve Mesafe Değişkenleri
     public float currentPoints = 0f;
     private float distanceTraveledMeters = 0f;
     private int highScore = 0;
@@ -41,6 +42,10 @@ public class GameManager : MonoBehaviour
     private float moveStartSpeed = 5f;
     private float stopSpeedLimit = 1f;
     private float loseDelay = 3f;
+
+    // Cached values to avoid updating TMP text every frame
+    private int lastInGameScore = -1;
+    private float lastInGameDistance = -1f;
 
     private void Awake()
     {
@@ -59,14 +64,12 @@ public class GameManager : MonoBehaviour
 
         SetLevelByScene();
 
-        // En yüksek skoru sistemden çek (Daha önce kaydedilmişse)
         highScore = PlayerPrefs.GetInt("HighScore", 0);
 
         gameStarted = true;
         playerStartedDriving = false;
         stillTimer = 0f;
 
-        // Değerleri sıfırla
         currentPoints = 0f;
         distanceTraveledMeters = 0f;
 
@@ -100,22 +103,39 @@ public class GameManager : MonoBehaviour
 
     private void CalculateScoreAndDistance()
     {
-        // Oyuncu sürmeye başladıysa hesaplamaları yap
         if (playerStartedDriving && carRB != null)
         {
-            // Zaman bazlı puan artışı
             currentPoints += pointsPerSecond * Time.deltaTime;
-
-            // Mesafe ölçümü: Aracın hızı (m/s) * geçen zaman = alınan yol (metre)
             distanceTraveledMeters += carRB.velocity.magnitude * Time.deltaTime;
 
-            // Eğer oyun içi UI'lara atama yaptıysan anlık olarak güncelle
-            if (inGameScoreText != null)
-                inGameScoreText.text = Mathf.FloorToInt(currentPoints).ToString("N0");
+<<<<<<< HEAD
+            // Only update UI text when values actually change (avoids per-frame TMP rebuilds)
+            int scoreInt = Mathf.FloorToInt(currentPoints);
+            if (inGameScoreText != null && scoreInt != lastInGameScore)
+            {
+                lastInGameScore = scoreInt;
+                inGameScoreText.text = scoreInt.ToString("N0");
+            }
 
-            if (inGameDistanceText != null)
-                inGameDistanceText.text = (distanceTraveledMeters / 1000f).ToString("F1") + " km";
+            float distanceKm = distanceTraveledMeters / 1000f;
+            if (inGameDistanceText != null && Mathf.Abs(distanceKm - lastInGameDistance) > 0.05f)
+            {
+                lastInGameDistance = distanceKm;
+                inGameDistanceText.text = distanceKm.ToString("F1") + " km";
+            }
+=======
+            UpdateInGameUI();
+>>>>>>> 81a7c253d3d96c8987a216967d424d4a278b57ba
         }
+    }
+
+    private void UpdateInGameUI()
+    {
+        if (inGameScoreText != null)
+            inGameScoreText.text = Mathf.FloorToInt(currentPoints).ToString("N0");
+
+        if (inGameDistanceText != null)
+            inGameDistanceText.text = (distanceTraveledMeters / 1000f).ToString("F1") + " km";
     }
 
     private void CheckLose()
@@ -124,7 +144,7 @@ public class GameManager : MonoBehaviour
         if (winScreen != null && winScreen.activeInHierarchy) return;
         if (carRB == null) return;
 
-        float speedKmh = carRB.velocity.magnitude * 3.6f; // m/s'yi km/h'ye çevirmek için 3.6 ile çarpmak daha doğru
+        float speedKmh = carRB.velocity.magnitude * 3.6f;
 
         if (!playerStartedDriving)
         {
@@ -152,27 +172,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddPoints(float amount)
+    {
+        currentPoints += amount;
+
+        if (currentPoints < 0)
+            currentPoints = 0;
+
+        UpdateInGameUI();
+    }
+
     public void LoseGame()
     {
-        gameStarted = false; // Puan sistemi ve fizik hesaplamaları durur
+        gameStarted = false;
         stillTimer = 0f;
         playerStartedDriving = false;
 
-        // Skoru integer'a yuvarla
         int finalScore = Mathf.FloorToInt(currentPoints);
 
-        // Yeni skor en yüksek skordan büyükse kaydet
         if (finalScore > highScore)
         {
             highScore = finalScore;
             PlayerPrefs.SetInt("HighScore", highScore);
-            PlayerPrefs.Save(); // Değişiklikleri diske yaz
+            PlayerPrefs.Save();
         }
 
-        // Metreyi kilometreye çevir
         float distanceKm = distanceTraveledMeters / 1000f;
 
-        // UI Text atamaları
         if (loseScoreText != null)
             loseScoreText.text = "Score:\n" + finalScore.ToString("N0");
 
@@ -182,7 +208,10 @@ public class GameManager : MonoBehaviour
         if (loseDistanceText != null)
             loseDistanceText.text = "Distance:\n" + distanceKm.ToString("F1") + " km";
 
-        Time.timeScale = 0f; // Oyunu durdur
+        if (musicPlayer != null)
+            musicPlayer.Stop();
+
+        Time.timeScale = 0f;
 
         if (loseScreen != null)
             loseScreen.SetActive(true);
@@ -199,8 +228,13 @@ public class GameManager : MonoBehaviour
         currentPoints = 0f;
         distanceTraveledMeters = 0f;
 
+        UpdateInGameUI();
+
         if (mainMenu != null) mainMenu.SetActive(false);
         if (loseScreen != null) loseScreen.SetActive(false);
         if (winScreen != null) winScreen.SetActive(false);
+
+        if (musicPlayer != null && !musicPlayer.isPlaying)
+            musicPlayer.Play();
     }
 }

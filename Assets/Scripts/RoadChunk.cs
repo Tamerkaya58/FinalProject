@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RoadChunk : MonoBehaviour
@@ -8,7 +7,6 @@ public class RoadChunk : MonoBehaviour
     private float RoadBoundaryX;
     private float ChunkLength;
     private int ChunkMaxCapacity = 3;
-    private float TotalWeight = 0f;
 
     private void Awake()
     {
@@ -26,19 +24,19 @@ public class RoadChunk : MonoBehaviour
 
         ClearChunk();
 
-        // Delegate spawning logic to the new decoupled spawner class.
-        // Pass 'this' as coroutine host so ChunkSpawner can run physics-unlock on the main thread.
         ChunkSpawner.SpawnContent(CurrentLevelData, SpawnedObjectsHolder, RoadBoundaryX, ChunkLength, this.transform.position.z, ChunkMaxCapacity, this);
     }
 
     public void ClearChunk()
     {
-        if (SpawnedObjectsHolder != null)
+        if (SpawnedObjectsHolder == null) return;
+
+        // Use for loop instead of foreach to avoid GC alloc from Transform enumerator
+        int childCount = SpawnedObjectsHolder.childCount;
+        for (int i = childCount - 1; i >= 0; i--)
         {
-            foreach (Transform ChildTransform in SpawnedObjectsHolder)
-            {
-                Destroy(ChildTransform.gameObject);
-            }
+            Transform child = SpawnedObjectsHolder.GetChild(i);
+            ChunkSpawner.ReturnToPool(child.gameObject);
         }
     }
 }

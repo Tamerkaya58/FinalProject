@@ -9,6 +9,11 @@ public class Bomb : MonoBehaviour
     [Tooltip("Determines If The Bomb Destroys Itself Upon Trigger.")]
     [SerializeField] private bool DestroyOnTrigger = true;
 
+    [Header("Score Penalty")]
+    [SerializeField] private float pointPenalty = 50f;
+
+    private bool triggered = false;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.K))
@@ -20,10 +25,20 @@ public class Bomb : MonoBehaviour
 
     private void OnTriggerEnter(Collider OtherCollider)
     {
+        if (triggered) return;
+
         if (OtherCollider.CompareTag("Player"))
         {
+            triggered = true;
+
             SpawnVfx();
-            Debug.Log("Trigger Entered: Playing Vfx At Bomb Location.");
+
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.AddPoints(-pointPenalty);
+            }
+
+            Debug.Log("Trigger Entered: Bomb hit. -50 points.");
 
             if (DestroyOnTrigger)
             {
@@ -36,12 +51,8 @@ public class Bomb : MonoBehaviour
     {
         if (PlayerVfxPrefab != null)
         {
-            // Instantiating the VFX and keeping its reference
             GameObject SpawnedVfx = Instantiate(PlayerVfxPrefab, transform.position, transform.rotation);
-            
-            // Forcing destruction after 2 seconds to prevent memory leaks
-            // Adjust the 2f value based on your particle's actual duration
-            Destroy(SpawnedVfx, 2f); 
+            Destroy(SpawnedVfx, 2f);
         }
         else
         {

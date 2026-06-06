@@ -17,6 +17,11 @@ public class UIManager : MonoBehaviour
 
     private string speedUnit;
 
+    // Cached values to avoid updating TMP text every frame
+    private int lastDisplayedSpeed = -1;
+    private int lastDisplayedPoints = -1;
+    private int lastDisplayedLevel = -1;
+
     private void Start()
     {
         if (car != null)
@@ -38,30 +43,44 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        ShowUI();
-    }
-
-    private void ShowUI()
-    {
         if (rb == null) return;
 
-        float baseSpeed = rb.velocity.magnitude * 3.6f; // Fiziğe uygun olması için 3.6f kullanıyoruz
+        float speedValue = rb.velocity.magnitude * 3.6f;
+        int displayedSpeed;
 
         if (speedUnit == "MPH")
         {
-            int mphSpeed = (int)(baseSpeed * 0.62f);
-            uiElementSpeed.text = mphSpeed + " MPH";
+            displayedSpeed = (int)(speedValue * 0.62f);
+            if (displayedSpeed != lastDisplayedSpeed)
+            {
+                lastDisplayedSpeed = displayedSpeed;
+                uiElementSpeed.text = displayedSpeed + " MPH";
+            }
         }
         else
         {
-            uiElementSpeed.text = ((int)baseSpeed) + " KM/H";
+            displayedSpeed = (int)speedValue;
+            if (displayedSpeed != lastDisplayedSpeed)
+            {
+                lastDisplayedSpeed = displayedSpeed;
+                uiElementSpeed.text = displayedSpeed + " KM/H";
+            }
         }
 
         if (GameManager.instance != null)
         {
-            // Puanı tam sayıya yuvarlayarak ekranda göster
-            uiElementPoints.text = Mathf.FloorToInt(GameManager.instance.currentPoints).ToString("N0");
-            uiElementLevel.text = "LEVEL : " + GameManager.level.ToString();
+            int currentPoints = Mathf.FloorToInt(GameManager.instance.currentPoints);
+            if (currentPoints != lastDisplayedPoints)
+            {
+                lastDisplayedPoints = currentPoints;
+                uiElementPoints.text = currentPoints.ToString("N0");
+            }
+
+            if (GameManager.level != lastDisplayedLevel)
+            {
+                lastDisplayedLevel = GameManager.level;
+                uiElementLevel.text = "LEVEL : " + lastDisplayedLevel;
+            }
         }
     }
 
@@ -82,13 +101,14 @@ public class UIManager : MonoBehaviour
     public void UpdateSpeedUnit()
     {
         speedUnit = PlayerPrefs.GetString("SpeedUnitPref", "KMH");
+        lastDisplayedSpeed = -1; // Force refresh
     }
 
     public void QuitApp()
     {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-#else        
+#else
         Application.Quit();
 #endif
     }
@@ -108,7 +128,7 @@ public class UIManager : MonoBehaviour
         int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
         if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
         {
-            GameManager.restartFromTryAgain = true; // Auto start next level
+            GameManager.restartFromTryAgain = true;
             SceneManager.LoadScene(nextSceneIndex);
         }
         else
