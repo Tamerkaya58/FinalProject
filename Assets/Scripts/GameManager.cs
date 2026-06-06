@@ -104,12 +104,17 @@ public class GameManager : MonoBehaviour
             currentPoints += pointsPerSecond * Time.deltaTime;
             distanceTraveledMeters += carRB.velocity.magnitude * Time.deltaTime;
 
-            if (inGameScoreText != null)
-                inGameScoreText.text = Mathf.FloorToInt(currentPoints).ToString("N0");
-
-            if (inGameDistanceText != null)
-                inGameDistanceText.text = (distanceTraveledMeters / 1000f).ToString("F1") + " km";
+            UpdateInGameUI();
         }
+    }
+
+    private void UpdateInGameUI()
+    {
+        if (inGameScoreText != null)
+            inGameScoreText.text = Mathf.FloorToInt(currentPoints).ToString("N0");
+
+        if (inGameDistanceText != null)
+            inGameDistanceText.text = (distanceTraveledMeters / 1000f).ToString("F1") + " km";
     }
 
     private void CheckLose()
@@ -144,6 +149,16 @@ public class GameManager : MonoBehaviour
         {
             stillTimer = 0f;
         }
+    }
+
+    public void AddPoints(float amount)
+    {
+        currentPoints += amount;
+
+        if (currentPoints < 0)
+            currentPoints = 0;
+
+        UpdateInGameUI();
     }
 
     public void LoseGame()
@@ -191,6 +206,8 @@ public class GameManager : MonoBehaviour
 
         currentPoints = 0f;
         distanceTraveledMeters = 0f;
+
+        UpdateInGameUI();
 
         if (mainMenu != null) mainMenu.SetActive(false);
         if (loseScreen != null) loseScreen.SetActive(false);
