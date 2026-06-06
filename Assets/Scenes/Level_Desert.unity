@@ -13757,7 +13757,7 @@ MonoBehaviour:
   mainMenu: {fileID: 0}
   speedUI: {fileID: 1867066491}
   pointsUI: {fileID: 870891366}
-  levelUI: {fileID: 1957761915}
+  levelUI: {fileID: 0}
 --- !u!4 &1213192298
 Transform:
   m_ObjectHideFlags: 0

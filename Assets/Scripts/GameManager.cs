@@ -108,31 +108,9 @@ public class GameManager : MonoBehaviour
             currentPoints += pointsPerSecond * Time.deltaTime;
             distanceTraveledMeters += carRB.velocity.magnitude * Time.deltaTime;
 
-<<<<<<< HEAD
-            // Only update UI text when values actually change (avoids per-frame TMP rebuilds)
-            int scoreInt = Mathf.FloorToInt(currentPoints);
-            if (inGameScoreText != null && scoreInt != lastInGameScore)
-            {
-                lastInGameScore = scoreInt;
-                inGameScoreText.text = scoreInt.ToString("N0");
-            }
-
-            float distanceKm = distanceTraveledMeters / 1000f;
-            if (inGameDistanceText != null && Mathf.Abs(distanceKm - lastInGameDistance) > 0.05f)
-            {
-                lastInGameDistance = distanceKm;
-                inGameDistanceText.text = distanceKm.ToString("F1") + " km";
-            }
-=======
-            UpdateInGameUI();
->>>>>>> 81a7c253d3d96c8987a216967d424d4a278b57ba
-        }
-    }
-
-    private void UpdateInGameUI()
-    {
-        if (inGameScoreText != null)
-            inGameScoreText.text = Mathf.FloorToInt(currentPoints).ToString("N0");
+            // Eğer oyun içi UI'lara atama yaptıysan anlık olarak güncelle
+            if (inGameScoreText != null)
+                inGameScoreText.text = Mathf.FloorToInt(currentPoints).ToString("N0");
 
         if (inGameDistanceText != null)
             inGameDistanceText.text = (distanceTraveledMeters / 1000f).ToString("F1") + " km";

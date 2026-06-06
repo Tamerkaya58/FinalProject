@@ -34,3 +34,9 @@ MonoBehaviour:
     YOffset: 3.5
     DontModifyRigidbody: 0
     UsePrefabRotation: 1
+  - Name: whiteBlocker
+    Prefab: {fileID: 3673342375579250468, guid: e17bb3bb47bf7364482d9fc4d565814a, type: 3}
+    Weight: 1
+    YOffset: 1.8
+    DontModifyRigidbody: 0
+    UsePrefabRotation: 1
