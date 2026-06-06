@@ -17018,7 +17018,7 @@ MonoBehaviour:
   btnUnitMPH: {fileID: 1004452489}
   selectedColor: {r: 1, g: 1, b: 1, a: 1}
   normalColor: {r: 1, g: 1, b: 1, a: 0}
-  cameraFollowScript: {fileID: 0}
+  cameraFollowScript: {fileID: 963194229}
 --- !u!114 &1647534111
 MonoBehaviour:
   m_ObjectHideFlags: 0
