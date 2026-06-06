@@ -778,7 +778,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 4316147044152164802, guid: 51fe5f6a416b80e479bdce1af6b8131d, type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 30f127eb87009804693d07039483e48c, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -6176,6 +6176,7 @@ MonoBehaviour:
   mainMenu: {fileID: 0}
   loseScreen: {fileID: 868029824}
   winScreen: {fileID: 1938456366}
+  musicPlayer: {fileID: 119268010}
   loseScoreText: {fileID: 1260942226}
   loseHighScoreText: {fileID: 163922310}
   loseDistanceText: {fileID: 1142961782}
@@ -15371,7 +15372,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1444260311}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.19, y: 2.731, z: 24.107}
+  m_LocalPosition: {x: 0, y: 2.731, z: 24.107}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -16981,7 +16982,7 @@ MonoBehaviour:
   generalSubPanel: {fileID: 772022147}
   audioSubPanel: {fileID: 925435610}
   displaySubPanel: {fileID: 1032607756}
-  audioMixer: {fileID: 0}
+  audioMixer: {fileID: 24100000, guid: 51fe5f6a416b80e479bdce1af6b8131d, type: 2}
   masterSlider: {fileID: 1837110063}
   musicSlider: {fileID: 536418998}
   engineSlider: {fileID: 1997234168}

@@ -719,7 +719,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 4316147044152164802, guid: 51fe5f6a416b80e479bdce1af6b8131d, type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 30f127eb87009804693d07039483e48c, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -11386,6 +11386,7 @@ MonoBehaviour:
   mainMenu: {fileID: 0}
   loseScreen: {fileID: 1967839441}
   winScreen: {fileID: 772285216}
+  musicPlayer: {fileID: 119268010}
   loseScoreText: {fileID: 688232244}
   loseHighScoreText: {fileID: 1755019304}
   loseDistanceText: {fileID: 488441697}
