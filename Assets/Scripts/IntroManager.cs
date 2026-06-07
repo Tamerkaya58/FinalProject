@@ -7,10 +7,27 @@ public class IntroManager : MonoBehaviour
     public GameObject introCanvas;
     public VideoPlayer videoPlayer;
 
-    public AudioSource musicPlayer; // EKLENDÝ
+    public AudioSource musicPlayer;
 
     void Start()
     {
+        // Lose ekranýndan Main Menu'ye dönüldüyse
+        if (PlayerPrefs.GetInt("OpenMapChoose", 0) == 1)
+        {
+            PlayerPrefs.SetInt("OpenMapChoose", 0);
+
+            if (introCanvas != null)
+                introCanvas.SetActive(false);
+
+            if (mainMenu != null)
+                mainMenu.SetActive(true);
+
+            if (musicPlayer != null)
+                musicPlayer.Play();
+
+            return;
+        }
+
 #if UNITY_EDITOR
         if (UnityEditor.EditorPrefs.GetBool("DevTool_SkipIntro", false))
         {

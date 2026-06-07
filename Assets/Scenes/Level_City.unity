@@ -5993,9 +5993,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 860247961}
-        m_TargetAssemblyTypeName: UIManager, GameScripts
-        m_MethodName: ReturnToMainMenu
+      - m_Target: {fileID: 794973981}
+        m_TargetAssemblyTypeName: MainMenuLoader, GameScripts
+        m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6073,6 +6073,8 @@ GameObject:
   - component: {fileID: 794973978}
   - component: {fileID: 794973977}
   - component: {fileID: 794973979}
+  - component: {fileID: 794973980}
+  - component: {fileID: 794973981}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6133,6 +6135,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentLevel: {fileID: 11400000, guid: 154fabadc3d6bd94c87376c74c6fa115, type: 2}
+--- !u!114 &794973980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794973975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e68dbef240d99404cb76ea24f330a5f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &794973981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794973975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0def938cdd9c38f4d970351b3f48c2b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &807396381
 GameObject:
   m_ObjectHideFlags: 0

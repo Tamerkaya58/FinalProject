@@ -12,6 +12,9 @@ public class Bomb : MonoBehaviour
     [Header("Score Penalty")]
     [SerializeField] private float pointPenalty = 50f;
 
+    [Header("Speed Penalty")]
+    [SerializeField] private float speedMultiplier = 0.7f;
+
     private bool triggered = false;
 
     private void Update()
@@ -33,12 +36,21 @@ public class Bomb : MonoBehaviour
 
             SpawnVfx();
 
+            // Aracý yavaþlat
+            Rigidbody carRB = OtherCollider.GetComponent<Rigidbody>();
+
+            if (carRB != null)
+            {
+                carRB.velocity *= speedMultiplier;
+            }
+
+            // Puan düþ
             if (GameManager.instance != null)
             {
                 GameManager.instance.AddPoints(-pointPenalty);
             }
 
-            Debug.Log("Trigger Entered: Bomb hit. -50 points.");
+            Debug.Log("Trigger Entered: Bomb hit. Speed reduced and points deducted.");
 
             if (DestroyOnTrigger)
             {

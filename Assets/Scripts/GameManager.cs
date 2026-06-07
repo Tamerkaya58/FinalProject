@@ -43,10 +43,6 @@ public class GameManager : MonoBehaviour
     private float stopSpeedLimit = 1f;
     private float loseDelay = 3f;
 
-    // Cached values to avoid updating TMP text every frame
-    private int lastInGameScore = -1;
-    private float lastInGameDistance = -1f;
-
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -108,9 +104,14 @@ public class GameManager : MonoBehaviour
             currentPoints += pointsPerSecond * Time.deltaTime;
             distanceTraveledMeters += carRB.velocity.magnitude * Time.deltaTime;
 
-            // Eğer oyun içi UI'lara atama yaptıysan anlık olarak güncelle
-            if (inGameScoreText != null)
-                inGameScoreText.text = Mathf.FloorToInt(currentPoints).ToString("N0");
+            UpdateInGameUI();
+        }
+    }
+
+    private void UpdateInGameUI()
+    {
+        if (inGameScoreText != null)
+            inGameScoreText.text = Mathf.FloorToInt(currentPoints).ToString("N0");
 
         if (inGameDistanceText != null)
             inGameDistanceText.text = (distanceTraveledMeters / 1000f).ToString("F1") + " km";

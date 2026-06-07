@@ -4,27 +4,31 @@ using UnityEngine;
 
 public static class ChunkSpawner
 {
-    // --- OBJECT POOL ---
-    // Key: Prefab, Value: Queue of inactive pooled instances
     private static Dictionary<GameObject, Queue<GameObject>> Pool = new Dictionary<GameObject, Queue<GameObject>>();
-
-    // --- COLLIDER CACHE ---
-    // Key: Prefab, Value: cached collider bottom half-extent (bounds.extents.y)
     private static Dictionary<GameObject, float> ColliderCache = new Dictionary<GameObject, float>();
 
-    // --- RIGIDBODY CACHE ---
-    // Key: Prefab, Value: true if the prefab has a Rigidbody component
-    private static Dictionary<GameObject, bool> RigidbodyCache = new Dictionary<GameObject, bool>();
+    public static void ClearPool()
+    {
+        Pool.Clear();
+        ColliderCache.Clear();
+    }
 
     private static GameObject GetFromPool(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent)
     {
+        if (prefab == null) return null;
+
         if (!Pool.ContainsKey(prefab))
             Pool[prefab] = new Queue<GameObject>();
 
-        GameObject instance;
-        if (Pool[prefab].Count > 0)
+        GameObject instance = null;
+
+        while (Pool[prefab].Count > 0 && instance == null)
         {
             instance = Pool[prefab].Dequeue();
+        }
+
+        if (instance != null)
+        {
             instance.transform.SetPositionAndRotation(position, rotation);
             instance.transform.SetParent(parent, true);
             instance.SetActive(true);
@@ -33,16 +37,22 @@ public static class ChunkSpawner
         {
             instance = GameObject.Instantiate(prefab, position, rotation, parent);
         }
+
         return instance;
     }
 
     public static void ReturnToPool(GameObject instance)
     {
         if (instance == null) return;
-        instance.SetActive(false);
-        // Detach from parent so it survives parent recycling
-        instance.transform.SetParent(null);
-        // Reset Rigidbody if present
+
+        PooledObjectMarker marker = instance.GetComponent<PooledObjectMarker>();
+
+        if (marker == null || marker.SourcePrefab == null)
+        {
+            GameObject.Destroy(instance);
+            return;
+        }
+
         Rigidbody rb = instance.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -51,26 +61,21 @@ public static class ChunkSpawner
             rb.angularVelocity = Vector3.zero;
         }
 
-        // Find which prefab this instance belongs to (fallback: use name matching)
-        // We store the prefab reference on spawn so we can look it up here
-        var marker = instance.GetComponent<PooledObjectMarker>();
-        if (marker != null && marker.SourcePrefab != null)
-        {
-            if (!Pool.ContainsKey(marker.SourcePrefab))
-                Pool[marker.SourcePrefab] = new Queue<GameObject>();
-            Pool[marker.SourcePrefab].Enqueue(instance);
-        }
-        else
-        {
-            // Fallback: add a marker and use the instance itself to find parent pool
-            // This shouldn't happen in practice since all spawned objects get a marker
-            GameObject.Destroy(instance); // Safety fallback
-        }
+        instance.SetActive(false);
+        instance.transform.SetParent(null);
+
+        if (!Pool.ContainsKey(marker.SourcePrefab))
+            Pool[marker.SourcePrefab] = new Queue<GameObject>();
+
+        Pool[marker.SourcePrefab].Enqueue(instance);
     }
 
     public static void SpawnContent(LevelData TargetLevelData, Transform HolderTransform, float RoadBoundaryX, float ChunkLength, float ChunkStartZ, int ChunkMaxCapacity, MonoBehaviour CoroutineHost)
     {
+        if (TargetLevelData == null || HolderTransform == null) return;
+
         float TotalWeight = CalculateTotalWeight(TargetLevelData);
+
         PlaceObstacles(TargetLevelData, HolderTransform, RoadBoundaryX, ChunkLength, ChunkStartZ, ChunkMaxCapacity, TotalWeight, CoroutineHost);
         PlaceCoins(TargetLevelData, HolderTransform, RoadBoundaryX, ChunkLength, ChunkStartZ);
     }
@@ -78,12 +83,18 @@ public static class ChunkSpawner
     private static float CalculateTotalWeight(LevelData TargetLevelData)
     {
         float TotalWeightValue = 0f;
-        if (TargetLevelData.SpawnableObjects == null) return 0f;
+
+        if (TargetLevelData.SpawnableObjects == null)
+            return 0f;
 
         for (int i = 0; i < TargetLevelData.SpawnableObjects.Count; i++)
         {
-            TotalWeightValue += TargetLevelData.SpawnableObjects[i].Weight;
+            if (TargetLevelData.SpawnableObjects[i] != null && TargetLevelData.SpawnableObjects[i].Prefab != null)
+            {
+                TotalWeightValue += TargetLevelData.SpawnableObjects[i].Weight;
+            }
         }
+
         return TotalWeightValue;
     }
 
@@ -92,44 +103,54 @@ public static class ChunkSpawner
         if (TargetLevelData.SpawnableObjects == null || TargetLevelData.SpawnableObjects.Count == 0)
             return;
 
-        int ObstacleCount = Mathf.Max(1, (TargetLevelData.Difficulty * 20) / ChunkMaxCapacity);
-        float ChunkEndZ = ChunkStartZ + ChunkLength;
+        if (TotalWeight <= 0f)
+            return;
 
+        int ObstacleCount = Mathf.Max(1, (TargetLevelData.Difficulty * 20) / ChunkMaxCapacity);
+
+        float ChunkEndZ = ChunkStartZ + ChunkLength;
         float SafeStartZ = ChunkStartZ + TargetLevelData.SpawnSafeZoneStart;
         float SafeEndZ = ChunkEndZ - TargetLevelData.SpawnSafeZoneEnd;
 
-        if (SafeStartZ >= SafeEndZ) return;
+        if (SafeStartZ >= SafeEndZ)
+            return;
 
         for (int Index = 0; Index < ObstacleCount; Index++)
         {
-            var SelectedData = GetRandomWeightedPrefab(TargetLevelData, TotalWeight);
-            if (SelectedData == null || SelectedData.Prefab == null) continue;
+            WeightedSpawn SelectedData = GetRandomWeightedPrefab(TargetLevelData, TotalWeight);
+
+            if (SelectedData == null || SelectedData.Prefab == null)
+                continue;
 
             float RandomXValue = Random.Range(-RoadBoundaryX, RoadBoundaryX);
             float RandomZValue = Random.Range(SafeStartZ, SafeEndZ);
             float BaseYPosition = SelectedData.YOffset;
 
-            // Cached collider lookup
             float ColliderBottomOffset = GetCachedColliderOffset(SelectedData.Prefab);
-
             float FinalYPosition = BaseYPosition + ColliderBottomOffset;
+
             Vector3 TargetSpawnPosition = new Vector3(RandomXValue, FinalYPosition, RandomZValue);
 
-            Quaternion TargetRotation = SelectedData.UsePrefabRotation ? SelectedData.Prefab.transform.rotation : Quaternion.Euler(0, 90, 0);
+            Quaternion TargetRotation = SelectedData.UsePrefabRotation
+                ? SelectedData.Prefab.transform.rotation
+                : Quaternion.Euler(0, 90, 0);
 
-            // Use object pool instead of Instantiate
             GameObject SpawnedObstacle = GetFromPool(SelectedData.Prefab, TargetSpawnPosition, TargetRotation, HolderTransform);
 
-            // Ensure marker exists for pool tracking
-            var marker = SpawnedObstacle.GetComponent<PooledObjectMarker>();
+            if (SpawnedObstacle == null)
+                continue;
+
+            PooledObjectMarker marker = SpawnedObstacle.GetComponent<PooledObjectMarker>();
+
             if (marker == null)
                 marker = SpawnedObstacle.AddComponent<PooledObjectMarker>();
+
             marker.SourcePrefab = SelectedData.Prefab;
 
-            // --- ANTI-GRAVITY SYSTEM INJECTION ---
             if (!SelectedData.DontModifyRigidbody)
             {
                 Rigidbody ObstacleRigidbody = SpawnedObstacle.GetComponent<Rigidbody>();
+
                 if (ObstacleRigidbody != null)
                 {
                     ObstacleRigidbody.isKinematic = true;
@@ -142,33 +163,27 @@ public static class ChunkSpawner
                     }
                 }
             }
-
-#if UNITY_EDITOR
-            if (UnityEditor.EditorPrefs.GetBool("DevTool_SpawnLogging", false))
-            {
-                Debug.Log($"<b>[Spawn Log]</b> Spawned <b>{SelectedData.Prefab.name}</b> at position: <color=#3498db>{TargetSpawnPosition}</color>");
-            }
-#endif
         }
     }
 
-    /// <summary>
-    /// Returns the bottom half-extent of the first Collider found on the prefab (cached on first call).
-    /// </summary>
     private static float GetCachedColliderOffset(GameObject prefab)
     {
+        if (prefab == null) return 0f;
+
         if (!ColliderCache.TryGetValue(prefab, out float offset))
         {
             Collider col = prefab.GetComponentInChildren<Collider>();
-            offset = (col != null) ? col.bounds.extents.y : 0f;
+            offset = col != null ? col.bounds.extents.y : 0f;
             ColliderCache[prefab] = offset;
         }
+
         return offset;
     }
 
     private static void PlaceCoins(LevelData TargetLevelData, Transform HolderTransform, float RoadBoundaryX, float ChunkLength, float ChunkStartZ)
     {
-        if (TargetLevelData.CoinPrefab == null) return;
+        if (TargetLevelData.CoinPrefab == null)
+            return;
 
         float ChunkEndZ = ChunkStartZ + ChunkLength;
         float CoinSpacingValue = 20f;
@@ -178,42 +193,50 @@ public static class ChunkSpawner
             float RandomXValue = Random.Range(-RoadBoundaryX, RoadBoundaryX);
             Vector3 TargetCoinPosition = new Vector3(RandomXValue, 1f, ZPosition);
 
-            // Use object pool for coins too
             GameObject SpawnedCoin = GetFromPool(TargetLevelData.CoinPrefab, TargetCoinPosition, Quaternion.identity, HolderTransform);
+
+            if (SpawnedCoin == null)
+                continue;
+
             SpawnedCoin.transform.localEulerAngles = new Vector3(0, 90, 90);
 
-            var marker = SpawnedCoin.GetComponent<PooledObjectMarker>();
+            PooledObjectMarker marker = SpawnedCoin.GetComponent<PooledObjectMarker>();
+
             if (marker == null)
                 marker = SpawnedCoin.AddComponent<PooledObjectMarker>();
+
             marker.SourcePrefab = TargetLevelData.CoinPrefab;
         }
     }
 
     private static WeightedSpawn GetRandomWeightedPrefab(LevelData TargetLevelData, float TotalWeight)
     {
-        if (TotalWeight <= 0f) return null;
+        if (TotalWeight <= 0f)
+            return null;
 
         float RandomValue = Random.Range(0f, TotalWeight);
         float WeightSumValue = 0f;
 
         for (int i = 0; i < TargetLevelData.SpawnableObjects.Count; i++)
         {
-            WeightSumValue += TargetLevelData.SpawnableObjects[i].Weight;
+            WeightedSpawn current = TargetLevelData.SpawnableObjects[i];
+
+            if (current == null || current.Prefab == null)
+                continue;
+
+            WeightSumValue += current.Weight;
+
             if (RandomValue <= WeightSumValue)
-            {
-                return TargetLevelData.SpawnableObjects[i];
-            }
+                return current;
         }
 
-        return TargetLevelData.SpawnableObjects[TargetLevelData.SpawnableObjects.Count - 1];
+        return null;
     }
 
-    // --- COROUTINE-BASED PHYSICS UNLOCKER ---
     private static IEnumerator UnlockPhysicsRoutine(Rigidbody TargetRigidbody)
     {
         yield return new WaitForSeconds(0.15f);
 
-        // Check that the object is still active (not returned to pool)
         if (TargetRigidbody != null && TargetRigidbody.gameObject != null && TargetRigidbody.gameObject.activeInHierarchy)
         {
             TargetRigidbody.isKinematic = false;
@@ -221,10 +244,6 @@ public static class ChunkSpawner
     }
 }
 
-/// <summary>
-/// Attached to pooled objects to track which prefab they originated from,
-/// enabling correct return to the right pool queue.
-/// </summary>
 public class PooledObjectMarker : MonoBehaviour
 {
     [HideInInspector] public GameObject SourcePrefab;
