@@ -131,7 +131,10 @@ public class GameManager : MonoBehaviour
         // Oyun başında araç 5 km/h hıza ulaşmadan lose kontrolü ASLA başlamaz.
         if (!playerStartedDriving)
         {
-            if (speedKmh >= 5f)
+            bool hasPressedWASD = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) ||
+                                  Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow);
+
+            if (speedKmh >= 5f && hasPressedWASD)
             {
                 playerStartedDriving = true;
                 stillTimer = 0f;
