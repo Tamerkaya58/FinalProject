@@ -1,19 +1,20 @@
 using UnityEngine;
+using System.Collections;
 
 public class Bomb : MonoBehaviour
 {
     [Header("Vfx Settings")]
-    [Tooltip("The Vfx Prefab To Play At The Bomb Position.")]
     [SerializeField] private GameObject PlayerVfxPrefab;
 
-    [Tooltip("Determines If The Bomb Destroys Itself Upon Trigger.")]
     [SerializeField] private bool DestroyOnTrigger = true;
 
     [Header("Score Penalty")]
     [SerializeField] private float pointPenalty = 50f;
 
     [Header("Speed Penalty")]
-    [SerializeField] private float speedMultiplier = 0.7f;
+    [SerializeField] private float speedMultiplier = 0.85f;
+
+    [SerializeField] private float minKeepSpeedKmh = 45f;
 
     private bool triggered = false;
 
@@ -29,34 +30,65 @@ public class Bomb : MonoBehaviour
     private void OnTriggerEnter(Collider OtherCollider)
     {
         if (triggered) return;
+        if (!OtherCollider.CompareTag("Player")) return;
 
-        if (OtherCollider.CompareTag("Player"))
+        triggered = true;
+
+        SpawnVfx();
+
+        Rigidbody carRB = OtherCollider.GetComponentInParent<Rigidbody>();
+
+        if (carRB != null)
         {
-            triggered = true;
-
-            SpawnVfx();
-
-            // Aracý yavaþlat
-            Rigidbody carRB = OtherCollider.GetComponent<Rigidbody>();
-
-            if (carRB != null)
-            {
-                carRB.velocity *= speedMultiplier;
-            }
-
-            // Puan düþ
-            if (GameManager.instance != null)
-            {
-                GameManager.instance.AddPoints(-pointPenalty);
-            }
-
-            Debug.Log("Trigger Entered: Bomb hit. Speed reduced and points deducted.");
-
-            if (DestroyOnTrigger)
-            {
-                Destroy(gameObject);
-            }
+            StartCoroutine(ApplySpeedPenaltyAfterPhysics(carRB));
         }
+
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.AddPoints(-pointPenalty);
+        }
+
+        Debug.Log("Trigger Entered: Bomb hit. Speed reduced and points deducted.");
+
+        if (DestroyOnTrigger)
+        {
+            StartCoroutine(DestroyAfterPhysics());
+        }
+    }
+
+    private IEnumerator ApplySpeedPenaltyAfterPhysics(Rigidbody carRB)
+    {
+        Vector3 oldVelocity = carRB.velocity;
+
+        Collider[] bombColliders = GetComponentsInChildren<Collider>();
+
+        foreach (Collider col in bombColliders)
+        {
+            col.enabled = false;
+        }
+
+        yield return new WaitForFixedUpdate();
+
+        if (carRB != null)
+        {
+            Vector3 newVelocity = oldVelocity * speedMultiplier;
+
+            float minKeepSpeed = minKeepSpeedKmh / 3.6f;
+
+            if (oldVelocity.magnitude > minKeepSpeed && newVelocity.magnitude < minKeepSpeed)
+            {
+                newVelocity = oldVelocity.normalized * minKeepSpeed;
+            }
+
+            carRB.velocity = newVelocity;
+        }
+    }
+
+    private IEnumerator DestroyAfterPhysics()
+    {
+        yield return new WaitForFixedUpdate();
+
+        Destroy(gameObject);
     }
 
     private void SpawnVfx()

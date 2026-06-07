@@ -39,9 +39,10 @@ public class GameManager : MonoBehaviour
     private bool playerStartedDriving = false;
     private float stillTimer = 0f;
 
-    private float moveStartSpeed = 5f;
-    private float stopSpeedLimit = 1f;
-    private float loseDelay = 3f;
+    [Header("=== Lose Ayarları ===")]
+    [SerializeField] private float moveStartSpeed = 5f;
+    [SerializeField] private float stopSpeedLimit = 1f;
+    [SerializeField] private float loseDelay = 3f;
 
     private void Awake()
     {
@@ -74,6 +75,8 @@ public class GameManager : MonoBehaviour
         if (winScreen != null) winScreen.SetActive(false);
 
         restartFromTryAgain = false;
+
+        UpdateInGameUI();
     }
 
     private void Update()
@@ -99,13 +102,13 @@ public class GameManager : MonoBehaviour
 
     private void CalculateScoreAndDistance()
     {
-        if (playerStartedDriving && carRB != null)
-        {
-            currentPoints += pointsPerSecond * Time.deltaTime;
-            distanceTraveledMeters += carRB.velocity.magnitude * Time.deltaTime;
+        if (!playerStartedDriving || carRB == null)
+            return;
 
-            UpdateInGameUI();
-        }
+        currentPoints += pointsPerSecond * Time.deltaTime;
+        distanceTraveledMeters += carRB.velocity.magnitude * Time.deltaTime;
+
+        UpdateInGameUI();
     }
 
     private void UpdateInGameUI()
@@ -125,9 +128,10 @@ public class GameManager : MonoBehaviour
 
         float speedKmh = carRB.velocity.magnitude * 3.6f;
 
+        // Oyun başında araç 5 km/h hıza ulaşmadan lose kontrolü ASLA başlamaz.
         if (!playerStartedDriving)
         {
-            if (speedKmh >= moveStartSpeed)
+            if (speedKmh >= 5f)
             {
                 playerStartedDriving = true;
                 stillTimer = 0f;
@@ -136,7 +140,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (speedKmh <= stopSpeedLimit)
+        // Araç 5 km/h gördükten sonra 0'a yakın durursa lose sayacı başlar.
+        if (speedKmh <= 0.5f)
         {
             stillTimer += Time.deltaTime;
 
@@ -163,6 +168,9 @@ public class GameManager : MonoBehaviour
 
     public void LoseGame()
     {
+        if (!playerStartedDriving)
+            return;
+
         gameStarted = false;
         stillTimer = 0f;
         playerStartedDriving = false;

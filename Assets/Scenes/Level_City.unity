@@ -6073,7 +6073,6 @@ GameObject:
   - component: {fileID: 794973978}
   - component: {fileID: 794973977}
   - component: {fileID: 794973979}
-  - component: {fileID: 794973980}
   - component: {fileID: 794973981}
   m_Layer: 0
   m_Name: GameManager
@@ -6107,6 +6106,9 @@ MonoBehaviour:
   pointsPerSecond: 10
   gameStarted: 0
   currentPoints: 0
+  moveStartSpeed: 5
+  stopSpeedLimit: 1
+  loseDelay: 3
 --- !u!4 &794973978
 Transform:
   m_ObjectHideFlags: 0
@@ -6135,18 +6137,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentLevel: {fileID: 11400000, guid: 154fabadc3d6bd94c87376c74c6fa115, type: 2}
---- !u!114 &794973980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 794973975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e68dbef240d99404cb76ea24f330a5f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &794973981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14097,11 +14087,16 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  brakeForce: 3000
+  brakeForce: 12000
   handbrakeForce: 4500
+  reverseMotorTorque: 1700
+  maxReverseSpeed: 55
+  reverseStartSpeed: 2
+  reverseSteerMultiplier: 1.3
   maxSteerAngle: 35
   highSpeedSteerFactor: 0.6
   steerSmoothing: 8
+  extraTurnForce: 9000
   normalRearGrip: 1.5
   driftGripMultiplier: 0.4
   gripRecoverySpeed: 5
@@ -14125,8 +14120,6 @@ MonoBehaviour:
   autoRecoverFromFlip: 1
   flipRecoveryDelay: 1
   flipRecoveryHeight: 1.5
-  reverseSteerMultiplier: 1.3
-  reverseTransitionSpeed: 6
   showDebugInfo: 0
 --- !u!82 &1551293882
 AudioSource:
@@ -20632,9 +20625,14 @@ MonoBehaviour:
     m_RotationOrder: 4
   brakeForce: 3000
   handbrakeForce: 4500
+  reverseMotorTorque: 1700
+  maxReverseSpeed: 55
+  reverseStartSpeed: 2
+  reverseSteerMultiplier: 1.3
   maxSteerAngle: 35
   highSpeedSteerFactor: 0.6
   steerSmoothing: 8
+  extraTurnForce: 9000
   normalRearGrip: 1.5
   driftGripMultiplier: 0.4
   gripRecoverySpeed: 5
@@ -20658,8 +20656,6 @@ MonoBehaviour:
   autoRecoverFromFlip: 1
   flipRecoveryDelay: 1
   flipRecoveryHeight: 1.5
-  reverseSteerMultiplier: 1.3
-  reverseTransitionSpeed: 6
   showDebugInfo: 0
 --- !u!4 &4665489378692687918
 Transform:

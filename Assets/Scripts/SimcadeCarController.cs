@@ -17,13 +17,20 @@ public class SimcadeCarController : MonoBehaviour
     );
 
     [Header("=== Fren ===")]
-    [SerializeField] private float brakeForce = 3000f;
+    [SerializeField] private float brakeForce = 4500f;
     [SerializeField] private float handbrakeForce = 4500f;
 
+    [Header("=== Geri Vites ===")]
+    [SerializeField] private float reverseMotorTorque = 1700f;
+    [SerializeField] private float maxReverseSpeed = 100f;
+    [SerializeField] private float reverseStartSpeed = 2f;
+    [SerializeField, Range(0.5f, 2.5f)] private float reverseSteerMultiplier = 1.3f;
+
     [Header("=== Direksiyon ===")]
-    [SerializeField] private float maxSteerAngle = 42f;
-    [SerializeField, Range(0.2f, 1f)] private float highSpeedSteerFactor = 0.65f;
-    [SerializeField, Range(2f, 20f)] private float steerSmoothing = 6f;
+    [SerializeField] private float maxSteerAngle = 55f;
+    [SerializeField, Range(0.2f, 1f)] private float highSpeedSteerFactor = 0.90f;
+    [SerializeField, Range(2f, 20f)] private float steerSmoothing = 20f;
+    [SerializeField] private float extraTurnForce = 9000f;
 
     [Header("=== Drift & Yol Tutuş ===")]
     [SerializeField] private float normalRearGrip = 1.5f;
@@ -60,10 +67,6 @@ public class SimcadeCarController : MonoBehaviour
     [SerializeField] private float flipRecoveryDelay = 1.0f;
     [SerializeField] private float flipRecoveryHeight = 1.5f;
 
-    [Header("=== Geri Vites ===")]
-    [SerializeField, Range(0.5f, 2.5f)] private float reverseSteerMultiplier = 1.3f;
-    [SerializeField, Range(2f, 15f)] private float reverseTransitionSpeed = 6f;
-
     [Header("=== Debug ===")]
     [SerializeField] private bool showDebugInfo = false;
 
@@ -83,9 +86,6 @@ public class SimcadeCarController : MonoBehaviour
 
     private WheelFrictionCurve origRearFriction;
     private WheelFrictionCurve origFrontFriction;
-
-    private bool isReversing;
-    private float reverseBlend;
 
     private void Awake()
     {
@@ -117,139 +117,90 @@ public class SimcadeCarController : MonoBehaviour
         if (CheckAndHandleFlip())
             return;
 
-        if (verticalInput > 0.1f)
-        {
-            isReversing = false;
-            reverseBlend = 0f;
-            ClearBrakes();
-        }
-        else if (verticalInput < -0.1f)
-        {
-            isReversing = true;
-            ClearBrakes();
-        }
-        else
-        {
-            float forwardDot = Vector3.Dot(rb.velocity, transform.forward);
-            isReversing = forwardDot < -0.5f;
-        }
+        CalculateSlipAngle();
 
-        float targetBlend = isReversing ? 1f : 0f;
-        reverseBlend = Mathf.MoveTowards(
-            reverseBlend,
-            targetBlend,
-            Time.fixedDeltaTime * reverseTransitionSpeed
-        );
-
-        if (isReversing)
-        {
-            HandleReverseMode();
-        }
-        else
-        {
-            CalculateSlipAngle();
-            HandleMotor();
-            HandleSteering();
-            HandleBraking();
-            HandleDriftGrip();
-            HandleStabilityAssist();
-            ApplyDownforce();
-        }
-
+        HandleMotorBrakeAndReverse();
+        HandleSteering();
+        ApplyExtraTurningForce();
+        HandleDriftGrip();
+        HandleStabilityAssist();
+        ApplyDownforce();
         UpdateWheels();
 
         if (showDebugInfo)
             DebugLog();
     }
 
-    private void HandleReverseMode()
+    private void ApplyExtraTurningForce()
     {
+        if (Mathf.Abs(horizontalInput) < 0.1f)
+            return;
+
+        if (currentSpeedKmh < 5f)
+            return;
+
+        Vector3 sideForce = transform.right * horizontalInput * extraTurnForce;
+        rb.AddForce(sideForce, ForceMode.Force);
+    }
+
+    private void HandleMotorBrakeAndReverse()
+    {
+        ClearBrakes();
+
         frontLeftWheelCollider.motorTorque = 0f;
         frontRightWheelCollider.motorTorque = 0f;
         rearLeftWheelCollider.motorTorque = 0f;
         rearRightWheelCollider.motorTorque = 0f;
 
-        ClearBrakes();
-
-        float reverseSteerAngle = horizontalInput * maxSteerAngle * reverseSteerMultiplier;
-        frontLeftWheelCollider.steerAngle = reverseSteerAngle;
-        frontRightWheelCollider.steerAngle = reverseSteerAngle;
-
-        if (verticalInput < -0.05f)
-        {
-            float reverseForce = Mathf.Abs(verticalInput) * maxMotorTorque * 0.7f;
-            float maxReverseSpeed = 60f;
-            float speedLimiter = 1f - Mathf.Clamp01(currentSpeedKmh / maxReverseSpeed);
-
-            float effectiveBlend = Mathf.Max(reverseBlend, 0.35f);
-
-            rb.AddForce(
-                -transform.forward * reverseForce * speedLimiter * effectiveBlend,
-                ForceMode.Force
-            );
-        }
-        else
-        {
-            rb.velocity = Vector3.Lerp(
-                rb.velocity,
-                Vector3.zero,
-                Time.fixedDeltaTime * 2f * reverseBlend
-            );
-        }
-
-        Vector3 av = rb.angularVelocity;
-        av.x *= 0.85f;
-        av.z *= 0.85f;
-
-        if (Mathf.Abs(horizontalInput) > 0.15f)
-        {
-            float speedFactor = Mathf.Clamp01(currentSpeedKmh / 40f);
-            float targetYaw = -horizontalInput * reverseSteerMultiplier * speedFactor * 5f;
-            av.y = Mathf.Lerp(av.y, targetYaw, Time.fixedDeltaTime * 12f);
-        }
-        else
-        {
-            av.y *= 0.7f;
-        }
-
-        rb.angularVelocity = av;
-
-        if (isHandbrake)
-            rb.velocity *= 0.95f;
-
-        float wheelSpinSpeed = -currentSpeedKmh * 6f;
-        SpinWheelMesh(rearLeftWheelTransform, wheelSpinSpeed);
-        SpinWheelMesh(rearRightWheelTransform, wheelSpinSpeed);
-    }
-
-    private void HandleMotor()
-    {
-        float speedRatio = Mathf.Clamp01(currentSpeedKmh / maxSpeed);
-        float torqueMult = torqueCurve.Evaluate(speedRatio);
-
         if (isHandbrake)
         {
-            rearLeftWheelCollider.motorTorque = 0f;
-            rearRightWheelCollider.motorTorque = 0f;
-            frontLeftWheelCollider.motorTorque = 0f;
-            frontRightWheelCollider.motorTorque = 0f;
+            rearLeftWheelCollider.brakeTorque = handbrakeForce;
+            rearRightWheelCollider.brakeTorque = handbrakeForce;
+
+            if (currentSpeedKmh > minDriftSpeed)
+                isDrifting = true;
+
             return;
         }
 
-        float torque = verticalInput * maxMotorTorque * torqueMult;
+        if (verticalInput > 0.1f)
+        {
+            float speedRatio = Mathf.Clamp01(currentSpeedKmh / maxSpeed);
+            float torqueMult = torqueCurve.Evaluate(speedRatio);
 
-        rearLeftWheelCollider.motorTorque = torque;
-        rearRightWheelCollider.motorTorque = torque;
+            float rearTorque = verticalInput * maxMotorTorque * torqueMult;
 
-        frontLeftWheelCollider.motorTorque = 0f;
-        frontRightWheelCollider.motorTorque = 0f;
+            rearLeftWheelCollider.motorTorque = rearTorque;
+            rearRightWheelCollider.motorTorque = rearTorque;
+
+            return;
+        }
+
+        if (verticalInput < -0.1f)
+        {
+            float brake = brakeForce;
+
+            frontLeftWheelCollider.brakeTorque = brake;
+            frontRightWheelCollider.brakeTorque = brake;
+            rearLeftWheelCollider.brakeTorque = brake;
+            rearRightWheelCollider.brakeTorque = brake;
+
+            return;
+        }
+
+        // Hiçbir tuşa basılmıyorsa motor ve fren tamamen kapalı.
     }
 
     private void HandleSteering()
     {
+        float forwardSpeed = Vector3.Dot(rb.velocity, transform.forward);
+        bool reversing = false;
+
         float speedRatio = Mathf.Clamp01(currentSpeedKmh / maxSpeed);
         float steerLimit = Mathf.Lerp(1f, highSpeedSteerFactor, speedRatio);
-        float targetSteerAngle = horizontalInput * maxSteerAngle * steerLimit;
+
+        float multiplier = reversing ? reverseSteerMultiplier : 1f;
+        float targetSteerAngle = horizontalInput * maxSteerAngle * steerLimit * multiplier;
 
         currentSteerAngle = Mathf.Lerp(
             currentSteerAngle,
@@ -259,51 +210,6 @@ public class SimcadeCarController : MonoBehaviour
 
         frontLeftWheelCollider.steerAngle = currentSteerAngle;
         frontRightWheelCollider.steerAngle = currentSteerAngle;
-    }
-
-    private void HandleBraking()
-    {
-        if (isHandbrake)
-        {
-            frontLeftWheelCollider.brakeTorque = 0f;
-            frontRightWheelCollider.brakeTorque = 0f;
-            rearLeftWheelCollider.brakeTorque = handbrakeForce;
-            rearRightWheelCollider.brakeTorque = handbrakeForce;
-
-            if (currentSpeedKmh > minDriftSpeed)
-                isDrifting = true;
-        }
-        else if (verticalInput < -0.1f)
-        {
-            float forwardDot = Vector3.Dot(rb.velocity, transform.forward);
-
-            if (forwardDot > 1f)
-            {
-                float brake = brakeForce * Mathf.Abs(verticalInput);
-
-                frontLeftWheelCollider.brakeTorque = brake;
-                frontRightWheelCollider.brakeTorque = brake;
-                rearLeftWheelCollider.brakeTorque = brake;
-                rearRightWheelCollider.brakeTorque = brake;
-            }
-            else
-            {
-                ClearBrakes();
-            }
-        }
-        else if (Mathf.Abs(verticalInput) < 0.1f)
-        {
-            float idleBrake = 300f;
-
-            frontLeftWheelCollider.brakeTorque = idleBrake;
-            frontRightWheelCollider.brakeTorque = idleBrake;
-            rearLeftWheelCollider.brakeTorque = idleBrake;
-            rearRightWheelCollider.brakeTorque = idleBrake;
-        }
-        else
-        {
-            ClearBrakes();
-        }
     }
 
     private void HandleDriftGrip()
@@ -475,15 +381,9 @@ public class SimcadeCarController : MonoBehaviour
         tr.rotation = rot;
     }
 
-    private void SpinWheelMesh(Transform wheelTr, float degreesPerSecond)
-    {
-        if (wheelTr == null) return;
-        wheelTr.Rotate(Vector3.right, degreesPerSecond * Time.fixedDeltaTime, Space.Self);
-    }
-
     private void DebugLog()
     {
-        Debug.Log($"[Simcade] {currentSpeedKmh:F0}km/h | Kayma:{slipAngle:F1}° | Drift:{isDrifting} | Grip:{currentRearGrip:F2}");
+        Debug.Log($"[Simcade] {currentSpeedKmh:F0}km/h | Slip:{slipAngle:F1} | Drift:{isDrifting}");
     }
 
     public float SpeedKmh => currentSpeedKmh;
