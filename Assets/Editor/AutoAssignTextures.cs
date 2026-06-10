@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -19,7 +20,7 @@ public class AutoAssignTextures : EditorWindow
             Material mat = AssetDatabase.LoadAssetAtPath<Material>(matFile);
             if (mat == null) continue;
 
-            // Shader'ý Standard'a çevir
+            // Shader'i Standard'a cevir
             mat.shader = Shader.Find("Standard");
 
             string matName = Path.GetFileNameWithoutExtension(matFile).ToLower();
@@ -45,3 +46,4 @@ public class AutoAssignTextures : EditorWindow
         Debug.Log($"Fixed {count} materials!");
     }
 }
+#endif

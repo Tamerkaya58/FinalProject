@@ -1,3 +1,4 @@
+﻿#if UNITY_EDITOR
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
@@ -142,3 +143,6 @@ public class MeshCombinerEditor : Editor
 		return folderPath;
 	}
 }
+
+#endif
+
